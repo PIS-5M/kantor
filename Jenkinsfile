@@ -4,8 +4,9 @@ pipeline {
     stage('Test') {
       steps {
         echo '"Hello world!"'
-        sh '''sh \'pip install pytest\'
-sh \'pytest test_trial_file.py\''''
+        sh '''pip install pytest
+'''
+        sh 'pytest test_trial_file.py'
       }
     }
 

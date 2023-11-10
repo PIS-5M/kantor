@@ -1,9 +1,10 @@
 pipeline {
   agent any
   stages {
-    stage('Build') {
+    stage('Test') {
       steps {
         echo '"Hello world!"'
+        powershell 'python3 trial_file.py'
       }
     }
 

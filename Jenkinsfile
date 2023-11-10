@@ -1,11 +1,11 @@
 pipeline {
   agent any
   stages {
-    stage('Build') {
+    stage('Test') {
       steps {
         echo '"Hello world!"'
         sh '''sh \'pip install pytest\'
-sh \'pytest mytest.py\''''
+sh \'pytest test_trial_file.py\''''
       }
     }
 

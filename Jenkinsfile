@@ -4,7 +4,7 @@ pipeline {
     stage('Test') {
       steps {
         echo '"Hello world!"'
-        sh 'python3 --version'
+        sh 'trial_file.py'
       }
     }
 

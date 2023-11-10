@@ -4,7 +4,7 @@ pipeline {
     stage('Test') {
       steps {
         echo '"Hello world!"'
-        sh 'trial_file.py'
+        powershell 'python3 trial_file.py'
       }
     }
 

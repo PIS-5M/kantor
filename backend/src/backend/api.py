@@ -9,7 +9,7 @@ origins = [
     "localhost:3000"
 ]
 
-# CORSMiddleware => cross-origin requests 
+# CORSMiddleware => cross-origin requests
 # eg. requests that originate from a different protocol, IP address, domain name, or port
 app.add_middleware(
     CORSMiddleware,
@@ -45,3 +45,16 @@ messages = [
 @app.get("/messages", tags=["messages"])
 async def get_messages() -> dict:
     return { "data": messages }
+
+
+@app.post("/registration")
+async def register_user(data: dict):
+    u_name = data['u_name']
+    surname = data['surname']
+    login = data['login']
+    password = data['password']
+    email = data['email']
+
+    print(f"Received registration data - user_name: {u_name}, surname: {surname}, login: {login}, password: {password}, email: {email}")
+
+    return {"message": "Registration successful"}

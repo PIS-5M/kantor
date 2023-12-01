@@ -49,12 +49,14 @@ async def get_messages() -> dict:
 
 @app.post("/registration")
 async def register_user(data: dict):
-    u_name = data['u_name']
+    name = data['name']
     surname = data['surname']
     login = data['login']
     password = data['password']
     email = data['email']
+    phoneNumber = data['phoneNumber']
+    bankAccount = data['bankAccount']
 
-    print(f"Received registration data - user_name: {u_name}, surname: {surname}, login: {login}, password: {password}, email: {email}")
+    print(f"Received registration data - user_name: {name}, surname: {surname}, login: {login}, password: {password}, email: {email}, phoneNumbe: {phoneNumber}, bank: {bankAccount}")
 
     return {"message": "Registration successful"}

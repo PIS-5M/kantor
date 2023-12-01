@@ -9,7 +9,9 @@ function RegistrationForm() {
     surname: '',
     login: '',
     password: '',
-    email: ''
+    email: '',
+    phoneNumber: '',
+    bankAccount: '',
   });
 
   const handleChange = (e) => {
@@ -24,8 +26,9 @@ function RegistrationForm() {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:8000/registration', {
-        u_name: formData.name, surname: formData.surname, login: formData.login,
-        password: formData.password, email: formData.email
+        name: formData.name, surname: formData.surname, login: formData.login,
+        password: formData.password, email: formData.email, phoneNumber: formData.phoneNumber,
+        bankAccount: formData.bankAccount
       });
       console.log("Message:", response.data.message);
 
@@ -116,6 +119,37 @@ function RegistrationForm() {
             required
           />
         </div>
+
+        <div className="mb-4">
+          <label htmlFor="phoneNumber" className="block mb-2 font-medium">
+            Numer telefonu
+          </label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
+            required
+            />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="bankAccount" className="block mb-2 font-medium">
+            Numer konta bankowego
+          </label>
+          <input
+            type="text"
+            id="bankAccount"
+            name="bankAccount"
+            value={formData.bankAccount}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
+            required
+          />
+        </div>
+
       </div>
 
         <div className="flex justify-end">

@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS kantor;
+
 CREATE TABLE `user` (
   `user_id` int unsigned NOT NULL AUTO_INCREMENT,
   `login` varchar(45) NOT NULL,

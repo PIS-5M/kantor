@@ -59,5 +59,19 @@ async def register_user(data: dict):
     bankAccount = data['bankAccount']
 
     print(f"Received registration data - user_name: {name}, surname: {surname}, login: {login}, password: {password}, email: {email}, phoneNumbe: {phoneNumber}, bank: {bankAccount}")
-    database.registration(login, password, name, surname, bankAccount, email, phoneNumber)
+    # database.registration(login, password, name, surname, bankAccount, email, phoneNumber)
     return {"message": "Registration successful"}
+
+
+@app.post("/login")
+async def login_user(data: dict):
+    login = data['login']
+    password = data['password']
+    status = False  # niepoprawny login
+
+    print(f"Received login data - login: {login}, password: {password}")
+    status = True   # tutaj te sprawdzanie czy login poprawny w bazie i może zwrócić True jak dobry i False jak zły
+    if status:
+        return {"message": "Login successful"}
+
+    return {"message": "Bad login or password"}

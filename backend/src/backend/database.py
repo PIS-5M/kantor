@@ -2,9 +2,9 @@ import mysql.connector
 
 # Ustawienia połączenia
 db_config = {
-    'host': 'localhost',
+    'host': 'localhost:4000',
     'user': 'root',
-    'password': '******',
+    'password': 'root',
     'database': 'kantor',
 }
 

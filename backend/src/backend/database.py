@@ -4,7 +4,7 @@ import mysql.connector
 db_config = {
     'host': 'localhost:4000',
     'user': 'root',
-    'password': '******',
+    'password': 'root',
     'database': 'kantor',
 }
 

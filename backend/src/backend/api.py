@@ -59,7 +59,7 @@ async def register_user(data: dict):
     bankAccount = data['bankAccount']
 
     print(f"Received registration data - user_name: {name}, surname: {surname}, login: {login}, password: {password}, email: {email}, phoneNumbe: {phoneNumber}, bank: {bankAccount}")
-    # database.registration(login, password, name, surname, bankAccount, email, phoneNumber)
+    database.registration(login, password, name, surname, bankAccount, email, phoneNumber)
     return {"message": "Registration successful"}
 
 

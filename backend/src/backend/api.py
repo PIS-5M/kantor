@@ -67,10 +67,9 @@ async def register_user(data: dict):
 async def login_user(data: dict):
     login = data['login']
     password = data['password']
-    status = False  # niepoprawny login
+    status = database.login(login, password)
 
     print(f"Received login data - login: {login}, password: {password}")
-    status = True   # tutaj te sprawdzanie czy login poprawny w bazie i może zwrócić True jak dobry i False jak zły
     if status:
         return {"message": "Login successful"}
 

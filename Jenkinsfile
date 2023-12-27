@@ -4,7 +4,7 @@ pipeline {
     stage('Test') {
       steps {
         echo '"Hello world!"'
-        sh 'pytest test_trial_file.py'
+        sh 'sh pytest test_trial_file.py'
       }
     }
 

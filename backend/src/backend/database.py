@@ -15,12 +15,12 @@ db_config = {
 # }
 
 
-def registration(login, pass_hash, name, surname, bank_acc_hash, mail, phone_number):
+def registration(pass_hash, name, surname, mail):
     conn = mysql.connector.connect(**db_config)
     try:
         # Utwórz obiekt kursora
         cursor = conn.cursor()
-        cursor.callproc('user_registration', (login, pass_hash, name, surname, bank_acc_hash, mail, phone_number))
+        cursor.callproc('user_registration', (pass_hash, name, surname, mail))
         cursor.execute("COMMIT;")
     except mysql.connector.Error as err:
         print(f"Błąd: {err}")
@@ -31,13 +31,13 @@ def registration(login, pass_hash, name, surname, bank_acc_hash, mail, phone_num
         if 'conn' in locals() and conn.is_connected():
             conn.close()
 
-def login(login, password):
+def login(email, password):
     conn = mysql.connector.connect(**db_config)
     try:
         # Utwórz obiekt kursora
         cursor = conn.cursor()
         # Wywołaj funkcję
-        args = (login, password)
+        args = (email, password)
         cursor.execute(f"SELECT user_login({', '.join('%s' for _ in args)})", args)
 
         # Pobierz wyniki

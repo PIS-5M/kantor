@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import bcrypt
 import database
 
 
@@ -52,24 +53,25 @@ async def get_messages() -> dict:
 async def register_user(data: dict):
     name = data['name']
     surname = data['surname']
-    login = data['login']
     password = data['password']
     email = data['email']
-    phoneNumber = data['phoneNumber']
-    bankAccount = data['bankAccount']
 
-    print(f"Received registration data - user_name: {name}, surname: {surname}, login: {login}, password: {password}, email: {email}, phoneNumbe: {phoneNumber}, bank: {bankAccount}")
-    database.registration(login, password, name, surname, bankAccount, email, phoneNumber)
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    hashed_password_string = hashed_password.decode('utf-8')
+
+    print(f"Received registration data - user_name: {name}, surname: {surname}, password: {hashed_password_string}, email: {email}")
+    database.registration(password, name, surname, email)
     return {"message": "Registration successful"}
 
 
 @app.post("/login")
 async def login_user(data: dict):
-    login = data['login']
+    email = data['email']
     password = data['password']
-    status = database.login(login, password)
 
-    print(f"Received login data - login: {login}, password: {password}")
+    status = database.login(email, password)
+
+    print(f"Received login data - email: {email}, password: {password}")
     if status:
         return {"message": "Login successful"}
 

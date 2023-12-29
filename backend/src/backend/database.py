@@ -57,3 +57,30 @@ def login(email, password):
             cursor.close()
         if 'conn' in locals() and conn.is_connected():
             conn.close()
+
+
+def email_used(email):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        # Utwórz obiekt kursora
+        cursor = conn.cursor()
+        # Wywołaj funkcję
+        args = email
+        cursor.execute(f"SELECT user_id form user where email={args}", args)
+
+        # Pobierz wyniki
+        result = cursor.fetchone()
+        print(result[0])
+        if result:
+            return True
+        else:
+            # email nie jest zajęty
+            return False
+    except mysql.connector.Error as err:
+        print(f"Błąd: {err}")
+    finally:
+        # Zamknij kursor i połączenie
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()

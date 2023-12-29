@@ -60,7 +60,7 @@ async def register_user(data: dict):
     hashed_password_string = hashed_password.decode('utf-8')
 
     print(f"Received registration data - user_name: {name}, surname: {surname}, password: {hashed_password_string}, email: {email}")
-    database.registration(password, name, surname, email)
+    database.registration(hashed_password_string, name, surname, email)
     return {"message": "Registration successful"}
 
 

@@ -1,4 +1,5 @@
 import mysql.connector
+import bcrypt
 
 # Ustawienia połączenia
 db_config = {
@@ -37,13 +38,17 @@ def login(email, password):
         # Utwórz obiekt kursora
         cursor = conn.cursor()
         # Wywołaj funkcję
-        args = (email, password)
-        cursor.execute(f"SELECT user_login({', '.join('%s' for _ in args)})", args)
+        args = email
+        cursor.execute(f"SELECT password, user_id form user where email={args}", args)
 
         # Pobierz wyniki
         result = cursor.fetchone()
         print(result[0])
-        return result[0] if result else None
+        if result and bcrypt.checkpw(password.encode('utf-8'), result[0].encode('utf-8')):
+            return result[1]
+        else:
+            # złe hasło
+            return None
     except mysql.connector.Error as err:
         print(f"Błąd: {err}")
     finally:

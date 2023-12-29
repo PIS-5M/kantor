@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import bcrypt
 import database
@@ -72,7 +72,8 @@ async def login_user(data: dict):
     status = database.login(email, password)
 
     print(f"Received login data - email: {email}, password: {password}")
+
     if status:
         return {"message": "Login successful"}
 
-    return {"message": "Bad login or password"}
+    raise HTTPException(status_code=400, detail="Bad login or password")

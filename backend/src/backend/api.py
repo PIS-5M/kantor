@@ -74,7 +74,7 @@ async def login_user(data: dict):
     print(f"Received login data - email: {email}, password: {password}")
 
     if status:
-        return {"message": "Login successful"}
+        return {"id": status}
 
     raise HTTPException(status_code=400, detail="Bad login or password")
 

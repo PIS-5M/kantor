@@ -38,8 +38,8 @@ def login(email, password):
         # Utwórz obiekt kursora
         cursor = conn.cursor()
         # Wywołaj funkcję
-        args = (email)
-        cursor.execute(f"SELECT password, user_id form user where email={args}", args)
+        args = (email,)
+        cursor.execute(f"SELECT password, user_id form user where email=%s", args)
 
         # Pobierz wyniki
         result = cursor.fetchone()

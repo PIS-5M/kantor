@@ -45,8 +45,12 @@ CREATE TABLE `kantor`.`offer_history` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
+
 ALTER TABLE `kantor`.`offer_history`
 ADD COLUMN `remaining_value` DECIMAL(20,2) NOT NULL AFTER `account_number`;
+
+ALTER TABLE `kantor`.`offer_history`
+ADD COLUMN `is_cancelled` BIT(1) NOT NULL AFTER `remaining_value`;
 
 CREATE TABLE `kantor`.`matched_offers` (
   `matched_offer_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -96,3 +100,6 @@ ADD CONSTRAINT `currency_fk`
   REFERENCES `kantor`.`currency` (`currency_id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+
+ALTER TABLE `kantor`.`transaction`
+CHANGE COLUMN `type` `type` ENUM('wpłacone', 'wypłacone') NOT NULL ;

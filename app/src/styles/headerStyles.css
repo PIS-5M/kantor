@@ -11,6 +11,10 @@
     margin-right: auto;
 }
 
+.buttonStyleHeader:hover {
+    background-color: #dedaf9;
+}
+
 .registrationButtonStyle {
     background-color: #2F4CB2;
     box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.25);
@@ -37,4 +41,32 @@
     color: #FEFBFB;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-weight: 600;
+}
+
+.sidebarStyle {
+    width: 230px;
+    background-color:#FEFBFB;
+    align-items: center;
+    height: 88.6vh;
+}
+
+.sidebarPosStyle {
+    margin-top: 30px;
+    height: 40px;
+    width: 200px;
+    border-bottom: 1px solid #2F4CB2;
+    text-align: center;
+}
+
+.sidebarPosStyle:hover {
+    background-color: #dedaf9;
+}
+
+.colStyle{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.wid {
+    width: 100vw;
 }

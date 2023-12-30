@@ -5,7 +5,7 @@ import {
   NavItem,
   NavLink,
 } from 'reactstrap';
-import "../styles/headerStyles.css"
+import "../styles/headerStyles.css";
 import clientToken from '../ClientToken.js';
 
 
@@ -56,7 +56,7 @@ function Header() {
                                                 Zarejestruj się
                                             </NavLink>
                                             </NavItem></>)
-    };
+    }
 
 
       </Nav>

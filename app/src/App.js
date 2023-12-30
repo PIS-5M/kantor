@@ -5,8 +5,7 @@ import {
   Route,
 } from "react-router-dom";
 
-import RegistrationButton from "./components/RegistrationButton";
-import LoginButton from "./components/LoginButton";
+import Header from "./components/Header";
 
 import Registration from "./views/Registration";
 import Home from "./views/Home";
@@ -18,18 +17,8 @@ function App() {
   return (
     <div className="">
       <Router>
-        <div className="flex items-center justify-between p-6">
-
-          <div className="font-bold text-6xl justify-center p-6">
-            Kantor
-          </div>
-          <div className="flex-col p-4">
-          <RegistrationButton />
-          <LoginButton/>
-          </div>
-        </div>
-
-        <div className="p-3 justify-center flex">
+        <Header />
+        <div>
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route exact path="/rejestracja" element={<Registration />} />

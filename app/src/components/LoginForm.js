@@ -1,100 +1,102 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState } from "react";
+import {
+    Input,
+    InputGroup,
+    Button,
+    Form,
+    FormFeedback,
+  } from 'reactstrap';
+  import axios from 'axios';
+  import '../styles/loginStyles.css'
+  import clientToken from "../ClientToken";
 
-function LoginForm(){
-    const [login, setLogin] = useState('');
-    const [password, setPassword] = useState('');
-    const [loggingError, setLoggingError] = useState('');
-    const navigate = useNavigate();
+function LoginForm ()
+{
+    const [userEmail, setUserEmail] = useState("")
+    const [userPassword, setUserPassword] = useState("")
+    const [loggingError, setLoggingError] = useState("")
+    const [validateEmail, setValidateEmail] = useState('')
+    const [validatePassword, setValidatePassword] = useState('')
+    const {login} = clientToken();
 
-    const handleLoginChange = (event) => {
-        setLogin(event.target.value);
-        setLoggingError('');
-    };
 
-    const handlePasswordChange = (event) => {
-        setPassword(event.target.value);
-        setLoggingError('');
-    };
-
-    const handleSubmit = async (event) => {
+    const Login = async (event) =>
+    {
         event.preventDefault();
         try {
             const response = await axios.post('http://localhost:8000/login', {
-                login: login, password: password
+                email: userEmail, password: userPassword
             });
-
-            if(response.data.message === 'Login successful'){
-                // Reset form
-                setLogin('');
-                setPassword('');
-                setLoggingError('');
-
-                // Go back to page
-                navigate('/zalogowany');
-            }
-            else{
-                // niepoprawny login lub hasło
-                setLoggingError('Niepoprawny login lub hasło ');
-                setLogin('');
-                setPassword('');
-                return;
-            }
+            login(response.data.id)
+            window.location.href = '/'
 
           } catch (error) {
-            console.error('Error logging in:', error);
+                setLoggingError(error.response.data.detail);}
+        };
+
+        const isValid = () => {
+            if(validateEmail === "has-success" && validatePassword ==='has-success') return true;
+            return false;
           }
 
-    };
 
-    return (
-        <div className="flex justify-center items-center">
-            <form className="p-8 bg-indigo-300 rounded shadow-lg mt-20 " onSubmit={handleSubmit}>
-                <h2 className="text-2xl font-bold mb-6 ">Logowanie</h2>
+        const handleLogin = (event) =>{
+            if(isValid() === false) {return};
+            Login(event);
+        }
 
-                <div className="mb-4">
-                    <label htmlFor="login" className="block mb-1">
-                        Login:
-                    </label>
-                    <input
-                        type="text"
-                        id="login"
-                        className="w-full border rounded px-3 py-2"
-                        value={login}
-                        onChange={handleLoginChange}
-                        required
-                    />
-                </div>
+        const isEmailValid = (e) => {
+            const emailRex =
+              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-                <div className="mb-4">
-                    <label htmlFor="password" className="block mb-1">
-                        Hasło:
-                    </label>
-                    <input
-                        type="password"
-                        id="password"
-                        className="w-full border rounded px-3 py-2"
-                        value={password}
-                        onChange={handlePasswordChange}
-                        required
-                    />
+            if (emailRex.test(e.target.value)) {
+              setValidateEmail('has-success');
+            } else {
+              setValidateEmail('has-danger');
+            }
+                }
 
-                {loggingError && <p className="text-red-500 py-2">{loggingError}</p>}
+        const isPasswordValid = (e) =>
+            {
+                if ("" === e.target.value) {
+                    setValidatePassword('has-danger');
+                }
+                else {
+                setValidatePassword('has-success')}
+            }
 
-                </div>
-                <div className="flex justify-end">
-                    <button
-                        type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                        Zaloguj
-                    </button>
-                </div>
-            </form>
 
+    return(
+        <div className="loginFormPos">
+    <div className="loginForm">
+        <h1 className="textLogin">Zaloguj się</h1>
+        <Form>
+            <InputGroup className="inputGroup">
+                <Input className="centeredTextInput" maxLength={30} placeholder="Adres e-mail"
+                                                    valid={validateEmail === 'has-success'}
+                                                    invalid={validateEmail === 'has-danger'}
+                                                    onChange={ev => { setUserEmail(ev.target.value); isEmailValid(ev); setLoggingError("")}} />
+                <FormFeedback>Wprowadź poprawny adres e-mail.</FormFeedback>
+            </InputGroup>
+            <InputGroup className="inputGroup">
+                <Input className="centeredTextInput" maxLength={30} type="password" placeholder="Hasło"
+                                                    valid={validatePassword === 'has-success'}
+                                                    invalid={validatePassword === 'has-danger'}
+                                                    onChange={ev => {setUserPassword(ev.target.value); isPasswordValid(ev); setLoggingError("")}}/>
+            <FormFeedback>Wprowadź swoje hasło.</FormFeedback>
+            </InputGroup>
+            <label className="errorLabel">{loggingError}</label>
+        </Form>
+        <div>
+            <Button
+                className="buttonStyleLoginUser whiteTextStyle" onClick={handleLogin}
+            >
+            ZALOGUJ SIĘ
+            </Button>
         </div>
-    );
-};
+    </div></div>
+    )
+
+}
 
 export default LoginForm;

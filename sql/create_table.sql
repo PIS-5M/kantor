@@ -15,6 +15,10 @@ CREATE TABLE `kantor`.`user` (
   `password_hash` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`user_id`));
 
+  ALTER TABLE `kantor`.`user`
+ADD UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE;
+;
+
 CREATE TABLE `kantor`.`offer_history` (
   `offer_history_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `publication_date` DATETIME NOT NULL,

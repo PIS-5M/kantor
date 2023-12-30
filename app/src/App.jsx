@@ -28,11 +28,11 @@ function App() {
       <Router>
             <Header />
             <Row className="wid">
-              {userId() &&
+
             <Col xs="3">
-              <Sidebar />
-              </Col>}
-            <Col xs="8" className="colStyle">
+            {userId() && <Sidebar />}
+              </Col>
+            <Col xs={userId() ? "8" : "0"} className="colStyle">
         <div>
           <Routes>
             <Route exact path="/" element={<Home />} />

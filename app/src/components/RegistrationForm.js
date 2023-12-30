@@ -1,17 +1,28 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  Input,
+  InputGroup,
+  Button,
+  Form,
+  FormFeedback,
+} from 'reactstrap';
 import axios from 'axios';
 
 function RegistrationForm() {
-  const navigate = useNavigate();
+  const [registrationError, setRegistrationError] = useState("")
   const [formData, setFormData] = useState({
     name: '',
     surname: '',
-    login: '',
-    password: '',
     email: '',
-    phoneNumber: '',
-    bankAccount: '',
+    password: '',
+    repeatedPassword: '',
+    validate: {
+      nameState: '',
+      surnameState: '',
+      emailState: '',
+      passwordState: '',
+      repeatedPasswordState: ''
+    }
   });
 
   const handleChange = (e) => {
@@ -26,141 +37,159 @@ function RegistrationForm() {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:8000/registration', {
-        name: formData.name, surname: formData.surname, login: formData.login,
-        password: formData.password, email: formData.email, phoneNumber: formData.phoneNumber,
-        bankAccount: formData.bankAccount
+        name: formData.name, surname: formData.surname,
+        password: formData.password, email: formData.email
       });
-      console.log("Message:", response.data.message);
 
     } catch (error) {
       console.error('Error registration', error);
     }
-
-    // Go to main page
-    navigate('/');
+    window.location.href = '/logowanie';
   };
 
-  return (
-    <form className="max-w-md mx-auto mt-8 shadow-lg rounded p-8 bg-indigo-300" onSubmit={handleSubmit}>
-      <h2 className="text-2xl font-bold mb-6">Rejestracja</h2>
+  const isEmailTaken = async (event, email) => {
+    try {
+        const response = await axios.post('http://localhost:8000/email_used', {
+          email: email,
 
-      <div>
-        <div className="mb-4">
-          <label htmlFor="name" className="block mb-2 font-medium">
-            Imię
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
-            required
-          />
-        </div>
+        });
+        return(response.data.message)
 
-        <div className="mb-4">
-          <label htmlFor="surname" className="block mb-2 font-medium">
-            Nazwisko
-          </label>
-          <input
-            type="text"
-            id="surname"
-            name="surname"
-            value={formData.surname}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
-            required
-          />
-        </div>
 
-        <div className="mb-4">
-          <label htmlFor="login" className="block mb-2 font-medium">
-            Login
-          </label>
-          <input
-            type="text"
-            id="login"
-            name="login"
-            value={formData.login}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
-            required
-          />
-        </div>
+      } catch (error) {
+      };
+    };
 
-        <div className="mb-4">
-          <label htmlFor="password" className="block mb-2 font-medium">
-            Hasło
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
-            required
-          />
-        </div>
+  const keysToCheck = ['nameState','surnameState', 'emailState', 'passwordState', 'repeatedPasswordState']
 
-        <div className="mb-4">
-          <label htmlFor="email" className="block mb-2 font-medium">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
-            required
-          />
-        </div>
+  const isValid = () => {
+    if(keysToCheck.every(key => formData.validate[key] === "has-success")) return true;
+    return false;
+  }
 
-        <div className="mb-4">
-          <label htmlFor="phoneNumber" className="block mb-2 font-medium">
-            Numer telefonu
-          </label>
-          <input
-            type="tel"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
-            required
-            />
-        </div>
+  const isNameValid = (e) => {
+    const { validate, ...userData} = formData;
+    const regex = /^(?:[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]* ?)+$/;
+    if (!(regex.test(e.target.value))) {
+      validate.nameState = 'has-danger';
+    } else {
+      validate.nameState = 'has-success';
+    }
+    setFormData({validate, ...userData})
+  }
 
-        <div className="mb-4">
-          <label htmlFor="bankAccount" className="block mb-2 font-medium">
-            Numer konta bankowego
-          </label>
-          <input
-            type="text"
-            id="bankAccount"
-            name="bankAccount"
-            value={formData.bankAccount}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
-            required
-          />
-        </div>
+  const isSurnameValid = (e) => {
+    const { validate, ...userData} = formData;
+    const regex = /^[A-ZŁŚŻ][a-ząćęłńóśźż]+([-][A-ZŁŚŻ][a-ząćęłńóśźż]+)?$/;
+    if (!(regex.test(e.target.value))) {
+      validate.surnameState = 'has-danger';
+    } else {
+      validate.surnameState = 'has-success';
+    }
+    setFormData({validate, ...userData})
+  }
 
-      </div>
+  const isEmailValid = (e) => {
+    const emailRex =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-        <div className="flex justify-end">
-            <button
-                  type="submit"
-                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-            Zarejestruj się
-            </button>
-        </div>
-    </form>
-  );}
+    const { validate, ...userData} = formData;
+
+    if (emailRex.test(e.target.value)) {
+      validate.emailState = 'has-success';
+    } else {
+      validate.emailState = 'has-danger';
+    }
+
+    setFormData({ validate, ...userData });
+        }
+
+  const isPasswordValid = (e) => {
+    const { validate, ...userData } = formData;
+    console.log(formData);
+    if (
+      e.target.value.length >= 8 &&
+      /[A-Z]/.test(e.target.value) &&
+      /[a-z]/.test(e.target.value) &&
+      /[0-9]/.test(e.target.value) &&
+      /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(e.target.value)
+    ) {
+      validate.passwordState = 'has-success';
+    } else {
+      validate.passwordState = 'has-danger';
+    }
+
+    setFormData({ validate, ...userData });
+  }
+
+  const isRepeatedPasswordValid = (e) => {
+    console.log(formData);
+    const {validate, ...userData } = formData;
+    if (e.target.value === formData.password) {
+      validate.repeatedPasswordState = 'has-success';
+    } else {
+      validate.repeatedPasswordState = 'has-danger';
+    }
+
+    setFormData({ validate, ...userData });
+  }
+
+
+  return(
+    <div className="loginFormPos">
+<div className="registrationForm">
+    <h1 className="textLogin">Zarejestruj się</h1>
+    <Form>
+        <InputGroup className="inputGroup">
+            <Input className="centeredTextInput" maxLength={50} placeholder="Imię" name="name" value={formData.name}
+                                                valid={formData.validate.nameState === 'has-success'}
+                                                invalid={formData.validate.nameState === 'has-danger'}
+                                                onChange={(ev) => { isNameValid(ev); handleChange(ev)}} />
+          <FormFeedback>Wprowadź swoje imię.</FormFeedback>
+        </InputGroup>
+        <InputGroup className="inputGroup">
+            <Input className="centeredTextInput" maxLength={50} placeholder="Nazwisko" name="surname" value={formData.surname}
+                                                valid={formData.validate.surnameState === 'has-success'}
+                                                invalid={formData.validate.surnameState=== 'has-danger'}
+                                                onChange={(ev) => {isSurnameValid(ev); handleChange(ev)}}/>
+        <FormFeedback>Wprowadź swoje nazwisko.</FormFeedback>
+        </InputGroup>
+        <InputGroup className="inputGroup">
+            <Input className="centeredTextInput" maxLength={50} placeholder="Adres e-mail" name="email" value={formData.email}
+                                                valid={formData.validate.emailState === 'has-success'}
+                                                invalid={formData.validate.emailState=== 'has-danger'}
+                                                onChange={(ev) => {isEmailValid(ev); handleChange(ev); setRegistrationError("")}}/>
+        <FormFeedback>Wprowadź poprawny adres e-mail.</FormFeedback>
+        </InputGroup>
+        <InputGroup className="inputGroup">
+            <Input className="centeredTextInput" type="password" maxLength={50} placeholder="Hasło" name="password" value={formData.password}
+                                                valid={formData.validate.passwordState === 'has-success'}
+                                                invalid={formData.validate.passwordState=== 'has-danger'}
+                                                onChange={(ev) => {isPasswordValid(ev); handleChange(ev)}}/>
+        <FormFeedback>Hasło musi zawierać co najmniej 8 znaków, małą i wielką literę, cyfrę oraz znak specjalny.</FormFeedback>
+        </InputGroup>
+        <InputGroup className="inputGroup">
+            <Input className="centeredTextInput" type="password" maxLength={50} placeholder="Powtórz hasło" name="repeatedPassword" value={formData.repeatedPassword}
+                                                valid={formData.validate.repeatedPasswordState === 'has-success'}
+                                                invalid={formData.validate.repeatedPasswordState=== 'has-danger'}
+                                                onChange={(ev) => {isRepeatedPasswordValid(ev); handleChange(ev)}}/>
+        <FormFeedback>Wprowadzone hasła nie są identyczne.</FormFeedback>
+        </InputGroup>
+        <label className="errorLabel">{registrationError}</label>
+    </Form>
+    <div>
+        <Button
+            className="buttonStyleLoginUser whiteTextStyle" type="submit" onClick={async (e) =>
+              {let isTaken = await isEmailTaken(e, formData.email);
+              if(!isTaken) {handleSubmit(e)}
+              else {setRegistrationError("Konto o podanym adresie e-mail już istnieje.")}}} disabled={!isValid()} >
+        ZAREJESTRUJ SIĘ
+        </Button>
+    </div>
+</div></div>
+)
+
+}
+
 
 export default RegistrationForm;

@@ -1,4 +1,0 @@
-npm install -D tailwindcss postcss autoprefixer
-npm install react-router-dom
-npm install axios
-npm install reactstrap

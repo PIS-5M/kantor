@@ -1,75 +1,71 @@
 CREATE DATABASE IF NOT EXISTS kantor;
 
-CREATE TABLE `user` (
-  `user_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `login` varchar(45) NOT NULL,
-  `password` varchar(45) NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `surname` varchar(45) NOT NULL,
-  `bank_account_hash` varchar(45) NOT NULL,
-  `email` varchar(45) NOT NULL,
-  `phone_number` varchar(12) NOT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `Login_UNIQUE` (`login`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `kantor`.`currency` (
+  `currency_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `abbreviation` VARCHAR(5) NOT NULL,
+  `account_number` VARCHAR(26) NOT NULL,
+  PRIMARY KEY (`currency_id`));
 
-CREATE TABLE `currency` (
-  `currency_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  PRIMARY KEY (`currency_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `kantor`.`user` (
+  `user_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `surname` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `password_hash` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`user_id`));
 
-CREATE TABLE `country` (
-  `country_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `currency_id` int unsigned NOT NULL,
-  PRIMARY KEY (`country_id`),
-  KEY `country_corrency_fk_idx` (`currency_id`),
-  CONSTRAINT `country_corrency_fk` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`currency_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `exchange_rate` (
-  `exchange_rate_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `date` date NOT NULL,
-  `value` decimal(11,4) NOT NULL,
-  `currency_id` int unsigned NOT NULL,
-  PRIMARY KEY (`exchange_rate_id`),
-  KEY `exchange_rate_currency_idx` (`currency_id`),
-  CONSTRAINT `exchange_rate_currency` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`currency_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `favourite_currency` (
-  `favourite_currency_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int unsigned NOT NULL,
-  `currency_id` int unsigned NOT NULL,
-  PRIMARY KEY (`favourite_currency_id`),
-  KEY `favourite_currency_user_fk_idx` (`user_id`),
-  KEY `favourite_currency_currency_fk_idx` (`currency_id`),
-  CONSTRAINT `favourite_currency_currency_fk` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`currency_id`),
-  CONSTRAINT `favourite_currency_user_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `transaction_history` (
-  `transaction_history_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `value` decimal(20,2) NOT NULL,
-  `value_currency_id` int unsigned NOT NULL,
-  `price` decimal(20,2) NOT NULL,
-  `price_currency_id` int unsigned NOT NULL,
-  `publication_date` datetime NOT NULL,
-  `seller_id` int unsigned NOT NULL,
-  `reservation_date` datetime DEFAULT NULL,
-  `buyer_id` int unsigned DEFAULT NULL,
-  `payment_date_seller` datetime DEFAULT NULL,
-  `payment_date_buyer` datetime DEFAULT NULL,
-  `commission` decimal(20,2) DEFAULT NULL,
-  PRIMARY KEY (`transaction_history_id`),
-  KEY `transaction_history_value_currency_fk_idx` (`value_currency_id`),
-  KEY `transaction_history_price_currency_fk_idx` (`price_currency_id`),
-  KEY `transaction_history__idx` (`seller_id`),
-  KEY `transaction_history_buyer_fk_idx` (`buyer_id`),
-  CONSTRAINT `transaction_history_buyer_fk` FOREIGN KEY (`buyer_id`) REFERENCES `user` (`user_id`),
-  CONSTRAINT `transaction_history_price_currency_fk` FOREIGN KEY (`price_currency_id`) REFERENCES `currency` (`currency_id`),
-  CONSTRAINT `transaction_history_seller_fk` FOREIGN KEY (`seller_id`) REFERENCES `user` (`user_id`),
-  CONSTRAINT `transaction_history_value_currency_fk` FOREIGN KEY (`value_currency_id`) REFERENCES `currency` (`currency_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+CREATE TABLE `kantor`.`offer_history` (
+  `offer_history_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `publication_date` DATETIME NOT NULL,
+  `last_modification_date` DATETIME NULL,
+  `seller_id` INT UNSIGNED NOT NULL,
+  `publication_currency_id` INT UNSIGNED NOT NULL,
+  `value` DECIMAL(20,2) NOT NULL,
+  `wanted_currency_id` INT UNSIGNED NOT NULL,
+  `exchange_rate` DECIMAL(20,2) NOT NULL,
+  `account_number` VARCHAR(26) NOT NULL,
+  PRIMARY KEY (`offer_history_id`),
+  INDEX `seller_fk_idx` (`seller_id` ASC) VISIBLE,
+  INDEX `publication_currency_fk_idx` (`publication_currency_id` ASC) VISIBLE,
+  INDEX `wanted_currency_fk_idx` (`wanted_currency_id` ASC) VISIBLE,
+  CONSTRAINT `seller_fk`
+    FOREIGN KEY (`seller_id`)
+    REFERENCES `kantor`.`user` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `publication_currency_fk`
+    FOREIGN KEY (`publication_currency_id`)
+    REFERENCES `kantor`.`currency` (`currency_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `wanted_currency_fk`
+    FOREIGN KEY (`wanted_currency_id`)
+    REFERENCES `kantor`.`currency` (`currency_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+    
+CREATE TABLE `kantor`.`transaction` (
+  `transaction_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(45) NOT NULL,
+  `offer_id` INT UNSIGNED NOT NULL,
+  `client_account_number` VARCHAR(26) NOT NULL,
+  `value` DECIMAL(20,2) NOT NULL,
+  `currency_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`transaction_id`));
+  
+  ALTER TABLE `kantor`.`transaction` 
+ADD INDEX `offer_fk_idx` (`offer_id` ASC) VISIBLE,
+ADD INDEX `currency_fk_idx` (`currency_id` ASC) VISIBLE;
+;
+ALTER TABLE `kantor`.`transaction` 
+ADD CONSTRAINT `offer_fk`
+  FOREIGN KEY (`offer_id`)
+  REFERENCES `kantor`.`offer_history` (`offer_history_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `currency_fk`
+  FOREIGN KEY (`currency_id`)
+  REFERENCES `kantor`.`currency` (`currency_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;

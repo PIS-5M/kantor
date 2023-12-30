@@ -44,7 +44,34 @@ CREATE TABLE `kantor`.`offer_history` (
     REFERENCES `kantor`.`currency` (`currency_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
-    
+
+ALTER TABLE `kantor`.`offer_history`
+ADD COLUMN `remaining_value` DECIMAL(20,2) NOT NULL AFTER `account_number`;
+
+CREATE TABLE `kantor`.`matched_offers` (
+  `matched_offer_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `earlier_offer_id` INT UNSIGNED NOT NULL,
+  `later_offer_id` INT UNSIGNED NOT NULL,
+  `earlier_value` DECIMAL(20,2) NOT NULL,
+  `later_value` DECIMAL(20,2) NOT NULL,
+  PRIMARY KEY (`matched_offer_id`));
+
+ALTER TABLE `kantor`.`matched_offers`
+ADD INDEX `earlier_offer_idx` (`earlier_offer_id` ASC) VISIBLE,
+ADD INDEX `later_offer_fk_idx` (`later_offer_id` ASC) VISIBLE;
+;
+ALTER TABLE `kantor`.`matched_offers`
+ADD CONSTRAINT `earlier_offer_fk`
+  FOREIGN KEY (`earlier_offer_id`)
+  REFERENCES `kantor`.`offer_history` (`offer_history_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `later_offer_fk`
+  FOREIGN KEY (`later_offer_id`)
+  REFERENCES `kantor`.`offer_history` (`offer_history_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
 CREATE TABLE `kantor`.`transaction` (
   `transaction_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `type` VARCHAR(45) NOT NULL,
@@ -53,12 +80,12 @@ CREATE TABLE `kantor`.`transaction` (
   `value` DECIMAL(20,2) NOT NULL,
   `currency_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`transaction_id`));
-  
-  ALTER TABLE `kantor`.`transaction` 
+
+  ALTER TABLE `kantor`.`transaction`
 ADD INDEX `offer_fk_idx` (`offer_id` ASC) VISIBLE,
 ADD INDEX `currency_fk_idx` (`currency_id` ASC) VISIBLE;
 ;
-ALTER TABLE `kantor`.`transaction` 
+ALTER TABLE `kantor`.`transaction`
 ADD CONSTRAINT `offer_fk`
   FOREIGN KEY (`offer_id`)
   REFERENCES `kantor`.`offer_history` (`offer_history_id`)

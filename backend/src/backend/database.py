@@ -5,7 +5,7 @@ import bcrypt
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': '*****',
+    'password': 'savana',
     'database': 'kantor',
 }
 # db_config = {
@@ -39,11 +39,10 @@ def login(email, password):
         cursor = conn.cursor()
         # Wywołaj funkcję
         args = (email,)
-        cursor.execute(f"SELECT password, user_id form user where email=%s", args)
+        cursor.execute(f"SELECT password, user_id from user where email=%s", args)
 
         # Pobierz wyniki
         result = cursor.fetchone()
-        print(result[0])
         if result and bcrypt.checkpw(password.encode('utf-8'), result[0].encode('utf-8')):
             return result[1]
         else:
@@ -65,12 +64,11 @@ def email_used(email):
         # Utwórz obiekt kursora
         cursor = conn.cursor()
         # Wywołaj funkcję
-        args = email
-        cursor.execute(f"SELECT user_id form user where email={args}", args)
+        args = (email, )
+        cursor.execute(f"SELECT user_id from user where email=%s", args)
 
         # Pobierz wyniki
-        result = cursor.fetchone()
-        print(result[0])
+        result = cursor.fetchall()
         if result:
             return True
         else:

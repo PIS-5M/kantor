@@ -76,7 +76,7 @@ async def login_user(data: dict):
     if status:
         return {"id": status}
 
-    raise HTTPException(status_code=400, detail="Bad login or password")
+    raise HTTPException(status_code=400, detail="Błędne dane logowania.")
 
 
 @app.post("/email_used")
@@ -86,5 +86,5 @@ async def email_used(data: dict):
     print(f"Received data - email: {email}")
     status = database.email_used(email)
     if status:
-        raise HTTPException(status_code=400, detail="Email already used")
-    return {"message": "Email ok"}
+        return {"message": True}
+    return {"message": False}

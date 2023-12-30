@@ -37,7 +37,7 @@ function Sidebar () {
     </NavLink>
   </NavItem>
   <NavItem className='sidebarPosStyle' onClick={handleLogout}>
-    <NavLink className='textStyle'>
+    <NavLink className='textStyle' href='/'>
       ❌ Wyloguj
     </NavLink>
   </NavItem>

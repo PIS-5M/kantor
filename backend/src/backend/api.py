@@ -65,3 +65,12 @@ async def email_used(data: dict):
     if status:
         return {"message": True}
     return {"message": False}
+
+
+@app.post("/all_currency")
+async def get_all_currency(data: dict):
+    email = data["email"]
+
+    print(f"Received data - email: {email}")
+    currency = database.get_all_currency()
+    return {"currency": currency}

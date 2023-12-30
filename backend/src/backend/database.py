@@ -5,7 +5,7 @@ import bcrypt
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'savana',
+    'password': 'Mikato@12',
     'database': 'kantor',
 }
 # db_config = {
@@ -74,6 +74,26 @@ def email_used(email):
         else:
             # email nie jest zajęty
             return False
+    except mysql.connector.Error as err:
+        print(f"Błąd: {err}")
+    finally:
+        # Zamknij kursor i połączenie
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
+
+def get_all_currency():
+    conn = mysql.connector.connect(**db_config)
+    try:
+        # Utwórz obiekt kursora
+        cursor = conn.cursor()
+        # Wywołaj funkcję
+        cursor.execute(f"select * from currency;")
+
+        # Pobierz wyniki
+        currency = cursor.fetchone()
+        return currency
     except mysql.connector.Error as err:
         print(f"Błąd: {err}")
     finally:

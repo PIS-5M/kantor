@@ -92,7 +92,7 @@ def get_all_currency():
         cursor.execute(f"select * from currency;")
 
         # Pobierz wyniki
-        currency = cursor.fetchone()
+        currency = cursor.fetchall()
         return currency
     except mysql.connector.Error as err:
         print(f"Błąd: {err}")

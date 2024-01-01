@@ -31,6 +31,12 @@
     font-weight: 600;
 }
 
+.blackTextStyle {
+    color: #00020b;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: 600;
+}
+
 .whiteTextStyle {
     color: #FEFBFB;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -48,6 +54,8 @@
     background-color:#FEFBFB;
     align-items: center;
     height: 88.6vh;
+    box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.25);
+
 }
 
 .sidebarPosStyle {
@@ -66,6 +74,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 50px;
 }
 .wid {
     width: 100vw;

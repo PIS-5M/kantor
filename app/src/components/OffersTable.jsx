@@ -2,17 +2,17 @@ import React from "react";
 import clientToken from "../ClientToken";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import z from "zod";
-import { Button, Table } from "reactstrap";
+import { Table } from "reactstrap";
 import { Trash, Edit } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
-const currencySchema = z.object({
-  currency_id: z.coerce.number(),
+export const currencySchema = z.object({
+  currency_id: z.coerce.number().positive("Nieprawidłowa waluta"),
   abbreviation: z.string(),
 });
 
-const offerSchema = z.object({
+export const offerSchema = z.object({
   offer_id: z.coerce.number(),
   publication_date: z.coerce.date(),
   last_modification_date: z.coerce.date(),
@@ -99,10 +99,10 @@ export const OffersTable = ({ type }) => {
   const captionText = type === "ACTIVE" ? "Aktywne" : "Zrealizowane";
 
   return (
-    <Table hover>
+    <Table hover className="custom-table">
       <caption className="caption-top">{captionText}</caption>
       <thead>
-        <tr className="[&>th]:align-top">
+        <tr className="[&>th]:align-top ">
           <th>Data wystawienia</th>
           <th>Data ostatniej modyfikacji</th>
           <th>Kwota</th>

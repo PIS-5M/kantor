@@ -40,7 +40,7 @@ export const TransactionsTable = () => {
   if (error) return "Error!";
 
   return (
-    <Table hover>
+    <Table hover className="custom-table">
       <thead>
         <tr>
           <th>Numer transakcji</th>

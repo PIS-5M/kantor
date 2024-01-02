@@ -7,4 +7,4 @@ nowe zgłoszenie
 
 nowa zmiana
 
-testing jenkins again 2
+testing jenkins again 2 3

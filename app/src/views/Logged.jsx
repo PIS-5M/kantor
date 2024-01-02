@@ -1,12 +1,11 @@
-import React from "react"
+import React from "react";
 
-
-function Logged(){
-    return(
-        <div className="font-bold text-3xl justify-center p-6">
-            Jesteś już zalogowany
-        </div>
-    )
+function Logged() {
+  return (
+    <div className="font-bold text-3xl justify-center p-6 BLUE_BG">
+      Jesteś już zalogowany
+    </div>
+  );
 }
 
-export default Logged
+export default Logged;

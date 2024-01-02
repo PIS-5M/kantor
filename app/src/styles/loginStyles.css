@@ -1,93 +1,87 @@
-body  {
-    background-color: #2F4CB2;
-
-}
-
-.inputGroup{
-    width: 250px;
-    position: flex;
-    align-items: flex-start;
-    justify-content: center;
-    margin-bottom: 20px;
+.inputGroup {
+  width: 250px;
+  position: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .loginFormPos {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
 }
 
-.loginForm{
-    background: #FEFBFB;
-    border: 10px solid #2D428D;
-    box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.25);
-    border-radius: 13%;
-    width: 400px;
-    height: 500px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.loginForm {
+  background: #fefbfb;
+  border: 10px solid #2d428d;
+  box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.25);
+  border-radius: 13%;
+  width: 400px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.registrationForm{
-    background: #FEFBFB;
-    border: 10px solid #2D428D;
-    box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.25);
-    border-radius: 10%;
-    width: 470px;
-    height: 600px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.registrationForm {
+  background: #fefbfb;
+  border: 10px solid #2d428d;
+  box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.25);
+  border-radius: 10%;
+  width: 470px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.textLogin{
-    font-family: 'Helvetica';
-    font-weight: bold;
-    text-align: center;
-    font-size: 50px;
-    color: rgb(0, 0, 0);
-    margin-bottom: 40px;
-  }
-
-.centeredTextInput{
-    background-color: #d4d4d4;
-    border: 3px solid #d4d4d4;
-    box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.25);
-    height: 50px;
-    border-radius: 12px;
-text-align: center;
-font-family: 'Helvetica';
+.textLogin {
+  font-family: "Helvetica";
+  font-weight: bold;
+  text-align: center;
+  font-size: 50px;
+  color: rgb(0, 0, 0);
+  margin-bottom: 40px;
 }
 
-.buttonStyleLoginUser{
-background: #2F4CB2;
-box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.25);
-border-radius: 26px;
-width: 250px;
-margin-top: 30px;
-height: 60px;
+.centeredTextInput {
+  background-color: #d4d4d4;
+  border: 3px solid #d4d4d4;
+  box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.25);
+  height: 50px;
+  border-radius: 12px;
+  text-align: center;
+  font-family: "Helvetica";
 }
 
-.buttonStyleLoginUser:hover{
-    background: #192d75;    }
-
-.whiteTextStyle{
-    font-family: 'Helvetica';
-    text-align: center;
-    font-size: 16px;
-    color: rgb(255, 252, 252);
+.buttonStyleLoginUser {
+  background: #2f4cb2;
+  box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.25);
+  border-radius: 26px;
+  width: 250px;
+  margin-top: 30px;
+  height: 60px;
 }
 
-.errorLabel{
-    font-family: 'Helvetica';
-    display: flex;
-    justify-content: center;
-    color: rgb(233, 14, 14);
-    font-size: 14px;
+.buttonStyleLoginUser:hover {
+  background: #192d75;
 }
 
+.whiteTextStyle {
+  font-family: "Helvetica";
+  text-align: center;
+  font-size: 16px;
+  color: rgb(255, 252, 252);
+}
 
+.errorLabel {
+  font-family: "Helvetica";
+  display: flex;
+  justify-content: center;
+  color: rgb(233, 14, 14);
+  font-size: 14px;
+}

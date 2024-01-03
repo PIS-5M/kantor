@@ -1,3 +1,25 @@
+const currencies = [
+  {
+    currency_id: 1,
+    abbreviation: "EUR",
+  },
+
+  {
+    currency_id: 2,
+    abbreviation: "USD",
+  },
+
+  {
+    currency_id: 3,
+    abbreviation: "SEK",
+  },
+
+  {
+    currency_id: 4,
+    abbreviation: "CHF",
+  },
+];
+
 const offers = [
   {
     offer_id: 1,
@@ -45,3 +67,4 @@ class DB {
 }
 
 export const OfferDB = new DB(offers);
+export const CurrenciesDB = new DB(currencies);

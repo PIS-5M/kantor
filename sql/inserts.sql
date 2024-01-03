@@ -10,3 +10,15 @@ INSERT INTO `currency` (`currency_id`, `name`, `abbreviation`, `account_number`)
 (9, 'Real Brazylijski', 'BRL', '77778888999911112222333344'),
 (10, 'Rupia Indyjska', 'INR', '55554444333322221111000066'),
 (11, 'Złoty Polski', 'PLN', '11112222333344445555666677');
+
+INSERT INTO `kantor`.`user` (`user_id`, `name`, `surname`, `email`, `password_hash`) VALUES
+(1, 'Jan', 'Kowalski', 'jan.kowalski@example.com', 'hash1'),
+(2, 'Anna', 'Nowak', 'anna.nowak@example.com', 'hash2'),
+(3, 'Piotr', 'Wójcik', 'piotr.wojcik@example.com', 'hash3'),
+(4, 'Maria', 'Dąbrowska', 'maria.dabrowska@example.com', 'hash4'),
+(5, 'Adam', 'Lis', 'adam.lis@example.com', 'hash5'),
+(6, 'Ewa', 'Mazurek', 'ewa.mazurek@example.com', 'hash6'),
+(7, 'Krzysztof', 'Wrona', 'krzysztof.wrona@example.com', 'hash7'),
+(8, 'Magdalena', 'Jankowska', 'magdalena.jankowska@example.com', 'hash8'),
+(9, 'Tomasz', 'Kaczmarek', 'tomasz.kaczmarek@example.com', 'hash9'),
+(10, 'Karolina', 'Zając', 'karolina.zajac@example.com', 'hash10');

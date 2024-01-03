@@ -12,7 +12,7 @@ CREATE TABLE `kantor`.`user` (
   `name` VARCHAR(45) NOT NULL,
   `surname` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
-  `password_hash` VARCHAR(45) NOT NULL,
+  `password_hash` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`user_id`));
 
   ALTER TABLE `kantor`.`user`

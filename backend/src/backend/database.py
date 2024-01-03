@@ -1,19 +1,6 @@
 import mysql.connector
 import bcrypt
-
-# Ustawienia połączenia
-db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'Mikato@12',
-    'database': 'kantor',
-}
-# db_config = {
-#     'host': 'localhost:4000',
-#     'user': 'root',
-#     'password': 'root',
-#     'database': 'kantor',
-# }
+from db_config import db_config
 
 
 def registration(pass_hash, name, surname, mail):

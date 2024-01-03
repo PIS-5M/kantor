@@ -6,3 +6,5 @@ zmiana test jenkinsa 2
 nowe zgłoszenie
 
 nowa zmiana
+
+testing jenkins again 2 3 4

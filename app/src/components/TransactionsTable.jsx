@@ -2,7 +2,8 @@ import React from "react";
 import { Table } from "reactstrap";
 import z from "zod";
 import clientToken from "../ClientToken";
-import axios from "axios";
+import { useQuery } from "react-query";
+
 const transactionEntrySchema = z.object({
   transaction_history_id: z.number(),
   offer_id: z.number(),
@@ -24,31 +25,22 @@ const transactionResponseSchema = z.object({
 
 export const TransactionsTable = () => {
   const { userId } = clientToken();
-  const [transactions, setTransactions] = React.useState([]);
 
-  React.useEffect(() => {
-    // Define the URL for the API endpoint
-    const apiUrl = `http://localhost:8000/user-transactions/${userId()}`;
+  // wbudowany fetch zamiast axiosa tez daje rade!
+  const { data, isLoading, error } = useQuery(`/user-transactions`, () =>
+    fetch("http://localhost:8000/user-transactions", {
+      method: "GET",
+      headers: { Authorization: `Bearer: ${userId()}` },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => transactionResponseSchema.parse(responseJson))
+  );
 
-    // Fetch data from the API using Axios
-    axios
-      .get(apiUrl)
-      .then((response) => {
-        // Assuming the response data is an array of transactions
-        const fetchedTransactions = transactionResponseSchema.parse(
-          response.data
-        );
-
-        // Update the state with the fetched transactions
-        setTransactions(fetchedTransactions.transactions);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []); // Re-fetch data whenever userId changes
+  if (isLoading) return "Loading...";
+  if (error) return "Error!";
 
   return (
-    <Table>
+    <Table hover className="custom-table">
       <thead>
         <tr>
           <th>Numer transakcji</th>
@@ -61,7 +53,7 @@ export const TransactionsTable = () => {
         </tr>
       </thead>
       <tbody>
-        {transactions.map((transaction) => (
+        {data.transactions.map((transaction) => (
           <tr key={transaction.transaction_history_id}>
             <td>{transaction.transaction_history_id}</td>
             <td>{transaction.offer_id}</td>

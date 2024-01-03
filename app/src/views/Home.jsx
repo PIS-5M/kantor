@@ -1,12 +1,18 @@
-import React from "react"
+import React, { useEffect, useState } from "react";
+import Calculator from "../components/Calculator";
+import Charts from "../components/CurrencyCharts";
 
-
-function Home(){
-    return(
-        <div className="font-bold text-3xl justify-center p-6">
-            Witaj w naszym kantorze
-        </div>
-    )
+function Home() {
+  return (
+    <div className="BLUE_BG">
+      <div>
+        <Calculator />
+      </div>
+      <div>
+        <Charts />
+      </div>
+    </div>
+  );
 }
 
-export default Home
+export default Home;

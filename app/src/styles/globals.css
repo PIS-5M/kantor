@@ -5,3 +5,16 @@
 body {
   font-family: "Exo 2";
 }
+
+body:has(div.BLUE_BG) {
+  background-color: #2f4cb2;
+}
+
+body:has(div.GREY_BG) {
+  background-color: #d9d9d9;
+}
+
+.custom-table thead th {
+  background-color: #2f4cb2 !important;
+  color: #ffffff !important;
+}

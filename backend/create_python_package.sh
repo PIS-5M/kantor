@@ -31,3 +31,5 @@ sed -i "s/version = \".*\"/version = \"$new_version\"/" pyproject.toml
 # Przejdź do katalogu i zbuduj paczkę pythonową
 cd "$(dirname "$0")" || exit
 python3 -m build
+
+echo "Pomyślnie utworzono paczkę pythonową dla nowego release'u backendu o numerze wersji: $new_version"

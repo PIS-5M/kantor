@@ -15,7 +15,8 @@ import clientToken from "./ClientToken";
 import { TransactionsHistory } from "./views/TransactionsHistory";
 import { MyOffers } from "./views/MyOffers";
 import { Toaster } from "react-hot-toast";
-import { CreateOfferForm } from "./components/CreateOfferForm";
+// import { CreateOfferForm } from "./components/CreateOfferForm";
+import { AllOffers } from "./views/AllOffers";
 
 function App() {
   const { userId } = clientToken();
@@ -37,7 +38,8 @@ function App() {
                 element={<TransactionsHistory />}
               />
               <Route exact path="/moje_oferty" element={<MyOffers />} />
-              <Route exact path="/dodaj" element={<CreateOfferForm />} />
+              {/* <Route exact path="/dodaj" element={<CreateOfferForm />} /> */}
+              <Route exact path="/oferty" element={<AllOffers />} />
             </Routes>
           </Col>
         </Row>

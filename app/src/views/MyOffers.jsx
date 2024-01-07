@@ -1,5 +1,5 @@
 import React from "react";
-import { OffersTable } from "../components/OffersTable";
+import { MyOffersTable } from "../components/MyOffersTable";
 
 export const MyOffers = () => {
   return (
@@ -13,8 +13,8 @@ export const MyOffers = () => {
           Dodaj ofertę
         </a>
       </header>
-      <OffersTable type="ACTIVE" />
-      <OffersTable type="CLOSED" />
+      <MyOffersTable type="ACTIVE" />
+      <MyOffersTable type="CLOSED" />
     </div>
   );
 };

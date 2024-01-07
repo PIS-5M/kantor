@@ -1,7 +1,32 @@
 import React from "react";
 import { AllOffersTable } from "../components/AllOffersTable";
+import z from "zod";
+import { useQuery } from "react-query";
+
+const allOffersSchema = z.object({
+  publication_date: z.coerce.date(),
+  last_modification_date: z.coerce.date(),
+  value: z.coerce.number(),
+  exchange_rate: z.coerce.number(),
+  currency: z.coerce.string().length(3),
+  wanted_currency: z.coerce.string().length(3),
+});
+
+const allOffersResponseSchema = z.object({
+  transactions: z.array(allOffersSchema),
+});
 
 export const AllOffers = () => {
+  const { data, isLoading, error } = useQuery(`/offers`, () =>
+    fetch("http://localhost:8000/offers", { method: "GET" })
+      .then((response) => response.json())
+      .then((responseJson) => allOffersResponseSchema.parse(responseJson))
+  );
+
+  if (isLoading) return "Loading...";
+  if (error) return "Error!";
+
+  // ! dummy do zastapienia przez `data` gdy bedzie juz backendowa funkcja
   const dummy = [
     {
       publication_date: new Date().toISOString().split("T")[0],

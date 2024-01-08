@@ -1,6 +1,13 @@
 import mysql.connector
 import bcrypt
-from backend.db_config import db_config
+
+# Ustawienia połączenia
+db_config = {
+    "host": "0.0.0.0",
+    "user": "root",
+    "password": "root",
+    "database": "kantor",
+}  # change password for correct
 
 
 def registration(pass_hash, name, surname, mail):
@@ -8,16 +15,17 @@ def registration(pass_hash, name, surname, mail):
     try:
         # Utwórz obiekt kursora
         cursor = conn.cursor()
-        cursor.callproc('user_registration', (pass_hash, name, surname, mail))
+        cursor.callproc("user_registration", (pass_hash, name, surname, mail))
         cursor.execute("COMMIT;")
     except mysql.connector.Error as err:
         print(f"Błąd: {err}")
     finally:
         # Zamknij kursor i połączenie
-        if 'cursor' in locals() and cursor is not None:
+        if "cursor" in locals() and cursor is not None:
             cursor.close()
-        if 'conn' in locals() and conn.is_connected():
+        if "conn" in locals() and conn.is_connected():
             conn.close()
+
 
 def login(email, password):
     conn = mysql.connector.connect(**db_config)
@@ -30,7 +38,9 @@ def login(email, password):
 
         # Pobierz wyniki
         result = cursor.fetchone()
-        if result and bcrypt.checkpw(password.encode('utf-8'), result[0].encode('utf-8')):
+        if result and bcrypt.checkpw(
+            password.encode("utf-8"), result[0].encode("utf-8")
+        ):
             return result[1]
         else:
             # złe hasło
@@ -39,9 +49,9 @@ def login(email, password):
         print(f"Błąd: {err}")
     finally:
         # Zamknij kursor i połączenie
-        if 'cursor' in locals() and cursor is not None:
+        if "cursor" in locals() and cursor is not None:
             cursor.close()
-        if 'conn' in locals() and conn.is_connected():
+        if "conn" in locals() and conn.is_connected():
             conn.close()
 
 
@@ -51,7 +61,7 @@ def email_used(email):
         # Utwórz obiekt kursora
         cursor = conn.cursor()
         # Wywołaj funkcję
-        args = (email, )
+        args = (email,)
         cursor.execute(f"SELECT user_id from user where email=%s", args)
 
         # Pobierz wyniki
@@ -65,10 +75,11 @@ def email_used(email):
         print(f"Błąd: {err}")
     finally:
         # Zamknij kursor i połączenie
-        if 'cursor' in locals() and cursor is not None:
+        if "cursor" in locals() and cursor is not None:
             cursor.close()
-        if 'conn' in locals() and conn.is_connected():
+        if "conn" in locals() and conn.is_connected():
             conn.close()
+
 
 def get_all_currency():
     conn = mysql.connector.connect(**db_config)
@@ -85,9 +96,7 @@ def get_all_currency():
         print(f"Błąd: {err}")
     finally:
         # Zamknij kursor i połączenie
-        if 'cursor' in locals() and cursor is not None:
+        if "cursor" in locals() and cursor is not None:
             cursor.close()
-        if 'conn' in locals() and conn.is_connected():
+        if "conn" in locals() and conn.is_connected():
             conn.close()
-
-

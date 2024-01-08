@@ -3,7 +3,7 @@ import bcrypt
 
 # Ustawienia połączenia
 db_config = {
-    "host": "0.0.0.0",
+    "host": "localhost",
     "user": "kantor_user",
     "password": "pis.kantor",
     "database": "kantor",

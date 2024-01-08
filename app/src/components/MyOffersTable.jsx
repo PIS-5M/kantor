@@ -81,7 +81,7 @@ const OfferRow = ({ offer }) => {
 /**
  * OffersTable component that fetches and displays offers based on their status
  */
-export const OffersTable = ({ type }) => {
+export const MyOffersTable = ({ type }) => {
   const [parent] = useAutoAnimate();
   const { userId } = clientToken();
   const { data, isLoading, error } = useQuery("userOffers", () =>

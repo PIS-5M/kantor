@@ -3,7 +3,7 @@ import bcrypt
 
 # Ustawienia połączenia
 db_config = {
-    "host": "host.docker.internal",
+    "host": "192.168.162.224",
     "user": "root",
     "password": "root",
     "database": "kantor",

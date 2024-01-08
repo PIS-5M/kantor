@@ -9,9 +9,10 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     "localhost:3000",
-    "http://localhost:3307",
-    "localhost:3307",
 ]
+
+#    "http://localhost:3307",
+#    "localhost:3307",
 
 # CORSMiddleware => cross-origin requests
 # eg. requests that originate from a different protocol, IP address, domain name, or port

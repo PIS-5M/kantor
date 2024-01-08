@@ -1,6 +1,6 @@
 import mysql.connector
 import bcrypt
-from db_config import db_config
+from backend.db_config import db_config
 
 
 def registration(pass_hash, name, surname, mail):
@@ -89,3 +89,5 @@ def get_all_currency():
             cursor.close()
         if 'conn' in locals() and conn.is_connected():
             conn.close()
+
+

@@ -103,7 +103,7 @@ def get_all_currency():
 
 def new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate):
     offer_id = add_new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate)
-    print(offer_id)
+    add_internal_transaction(user_id, selled_currency_id, value)
 
 def add_new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate):
     conn = mysql.connector.connect(**db_config)
@@ -125,3 +125,20 @@ def add_new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchan
             cursor.close()
         if 'conn' in locals() and conn.is_connected():
             conn.close()
+
+def add_internal_transaction(user_id, currency_id, value):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        # Utwórz obiekt kursora
+        cursor = conn.cursor()
+        cursor.callproc('add_internal_transaction', (user_id, currency_id, value))
+        conn.commit()
+    except mysql.connector.Error as err:
+        print(f"Błąd: {err}")
+    finally:
+        # Zamknij kursor i połączenie
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
+

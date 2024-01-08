@@ -1,7 +1,8 @@
 import pytest
 from pytest_mock import mocker
 from unittest.mock import patch
-from backend.database import login, add_new_offer
+from backend.database import login, add_new_offer, add_internal_transaction
+import mysql.connector
 
 def test_login_successful(mocker):
     # Mock the cursor and execute method
@@ -77,4 +78,25 @@ def test_add_new_offer_error(mocker):
     with pytest.raises(Exception, match='Database error'):
         add_new_offer(1, 2, 100.0, 3, 4.5)
 
+def test_add_internal_transaction_success():
+    with patch("backend.database.mysql.connector.connect") as mock_connect:
+        # Ustawienie symulowanych wyników
+        mock_cursor = mock_connect.return_value.cursor.return_value
+
+        # Wywołanie funkcji
+        add_internal_transaction(1, 2, 100.0)
+
+        # Sprawdzenie, czy metody zostały poprawnie wywołane
+        mock_cursor.callproc.assert_called_once_with('add_internal_transaction', (1, 2, 100.0))
+        mock_connect.return_value.commit.assert_called_once()
+
+
+# def test_add_internal_transaction_error(mocker):
+#     with patch("backend.database.mysql.connector.connect") as mock_connect:
+#         mock_cursor = mock_connect.return_value.cursor.return_value
+#         mock_cursor.callproc.side_effect = mysql.connector.Error('Database error')
+
+#         # Wywołanie funkcji i sprawdzenie, czy oczekiwany wyjątek został rzucony
+#         with pytest.raises(Exception):
+#             add_internal_transaction(1, 2, 100.0)
 

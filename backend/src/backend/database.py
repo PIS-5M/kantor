@@ -100,3 +100,28 @@ def get_all_currency():
             cursor.close()
         if "conn" in locals() and conn.is_connected():
             conn.close()
+
+def new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate):
+    offer_id = add_new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate)
+    print(offer_id)
+
+def add_new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        # Utwórz obiekt kursora
+        cursor = conn.cursor()
+        cursor.callproc('add_offer', (user_id, selled_currency_id, value, wanted_currency_id, exchange_rate))
+
+        # Pobierz wynik z procedury
+        cursor.execute("SELECT LAST_INSERT_ID()")
+        result = cursor.fetchone()
+        conn.commit()
+        return result[0]
+    except mysql.connector.Error as err:
+        print(f"Błąd: {err}")
+    finally:
+        # Zamknij kursor i połączenie
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()

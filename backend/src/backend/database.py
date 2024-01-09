@@ -3,7 +3,7 @@ import bcrypt
 
 # Ustawienia polaczenia
 db_config = {
-    "host": "mysql-db",
+    "host": "172.19.0.2",
     "user": "kantor_user",
     "password": "pis.kantor",
     "database": "kantor",

@@ -77,3 +77,15 @@ async def email_used(data: dict):
 async def get_all_currency():
     currency = database.get_all_currency()
     return {"currency": currency}
+
+
+@app.post("/user_data")
+async def user_data(data: dict):
+    id = data["id"]
+
+    name, surname, email = database.get_user_data(id)
+
+    if name or surname or email:
+        return {"name": name, "surname": surname, "email": email}
+
+    raise HTTPException(status_code=400, detail="Podany użytkownik nie istnieje")

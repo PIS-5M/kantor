@@ -77,3 +77,16 @@ async def email_used(data: dict):
 async def get_all_currency():
     currency = database.get_all_currency()
     return {"currency": currency}
+
+
+@app.post("/add_new_wallet")
+async def add_new_wallet(data: dict):
+    user_id = data["user_id"]
+    currency_id = data["currency_id"]
+    account = data["account"]
+
+    hashed_account = bcrypt.hashpw(account.encode("utf-8"), bcrypt.gensalt())
+    hashed_account_string = hashed_account.decode("utf-8")
+
+    database.add_wallet(user_id, currency_id, hashed_account_string)
+    return {"message": "Succesfully added wallet"}

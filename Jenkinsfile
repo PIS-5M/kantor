@@ -10,7 +10,6 @@ pipeline {
             }
             steps {
                 sh './create_packages.sh' 
-                stash(name: 'compiled-results', includes: 'sources/*.py*') 
             }
         }
     stage('Test') {

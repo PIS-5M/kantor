@@ -18,7 +18,7 @@ def registration(pass_hash, name, surname, mail):
         cursor.callproc("user_registration", (pass_hash, name, surname, mail))
         cursor.execute("COMMIT;")
     except mysql.connector.Error as err:
-        print(f"Błąd: {err}")
+        print(f"Blad: {err}")
     finally:
         # Zamknij kursor i polaczenie
         if "cursor" in locals() and cursor is not None:
@@ -46,7 +46,7 @@ def login(email, password):
             # zle haslo
             return None
     except mysql.connector.Error as err:
-        print(f"Błąd: {err}")
+        print(f"Blad: {err}")
     finally:
         # Zamknij kursor i polaczenie
         if "cursor" in locals() and cursor is not None:
@@ -72,7 +72,7 @@ def email_used(email):
             # email nie jest zajety
             return False
     except mysql.connector.Error as err:
-        print(f"Błąd: {err}")
+        print(f"Blad: {err}")
     finally:
         # Zamknij kursor i polaczenie
         if "cursor" in locals() and cursor is not None:
@@ -93,7 +93,7 @@ def get_all_currency():
         currency = cursor.fetchall()
         return currency
     except mysql.connector.Error as err:
-        print(f"Błąd: {err}")
+        print(f"Blad: {err}")
     finally:
         # Zamknij kursor i polaczenie
         if "cursor" in locals() and cursor is not None:

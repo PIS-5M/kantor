@@ -37,7 +37,12 @@ export const CreateOfferForm = () => {
     defaultValues,
   });
 
-  const [dialogData, setDialogData] = React.useState(null); // display matching offers that were found
+  // helpers for showing matched offers in a modal
+  const [dialogData, setDialogData] = React.useState(null);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  //
 
   const qc = useQueryClient();
   const { mutateAsync, isLoading } = useMutation(
@@ -89,7 +94,8 @@ export const CreateOfferForm = () => {
         console.log("Matches:", response.matches);
         toast.success("Oferta została dodana!");
         //JSON.stringify(response.matches)
-        setDialogData(response.matches); // ustawiona flaga ze sa matche
+        setDialogData(response.matches);
+        setIsModalOpen(true); // Open the modal
       }
     } catch (e) {
       console.error(e);
@@ -198,12 +204,11 @@ export const CreateOfferForm = () => {
         </Button>
       </Form>
 
-      {dialogData && (
-        <DialogMatches
-          data={dialogData}
-          onClose={() => setDialogData(null)} // Method to close the dialog
-        />
-      )}
+      <DialogMatches
+        isOpen={isModalOpen}
+        data={dialogData}
+        toggle={toggleModal}
+      />
     </div>
   );
 };

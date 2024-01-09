@@ -10,7 +10,7 @@ pipeline {
             }
             steps {
             sh '''
-               ./var/jenkins_home/workspace/kantor5M_main@3/create_scripts.sh
+               cat var/jenkins_home/workspace/kantor5M_main@3/create_scripts.sh
             '''  
             }
         }

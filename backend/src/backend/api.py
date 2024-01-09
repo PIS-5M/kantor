@@ -89,3 +89,13 @@ async def user_data(data: dict):
         return {"name": name, "surname": surname, "email": email}
 
     raise HTTPException(status_code=400, detail="Podany użytkownik nie istnieje")
+
+@app.post("/add_offer")
+async def email_used(data: dict):
+    user_id = data['user_id']
+    selled_currency_id = data['selled_currency_id']
+    value = data['value']
+    wanted_currency_id = data['wanted_currency_id']
+    exchange_rate = data['exchange_rate']
+    matches = database.new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate)
+    return {"matches": matches}

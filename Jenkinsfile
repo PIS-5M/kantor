@@ -9,7 +9,6 @@ pipeline {
                 }
             }
             steps {
-                sh 'sudo pip install pytest_mock'
                 sh 'py.test /var/jenkins_home/workspace/kantor5M_main/backend/src/backend/test.py'
             }
         }

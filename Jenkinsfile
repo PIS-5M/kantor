@@ -5,6 +5,7 @@ pipeline {
             agent {
                 docker {
                     image 'qnib/pytest'
+                    image 'python:3.12.1-alpine3.19'
                 }
             }
             steps {

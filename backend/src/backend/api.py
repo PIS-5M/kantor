@@ -77,3 +77,11 @@ async def email_used(data: dict):
 async def get_all_currency():
     currency = database.get_all_currency()
     return {"currency": currency}
+
+
+@app.post("/wallet_add")
+async def add_to_wallet(data: dict):
+    wallet_id = data["wallet_id"]
+    value = data["value"]
+    database.wallet_add(wallet_id, value)
+    return {"message": "Succesfully added to wallet"}

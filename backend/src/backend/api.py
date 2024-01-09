@@ -6,16 +6,22 @@ import database
 
 app = FastAPI()
 
-origins = ["http://localhost:3000", "localhost:3000"]
+origins = [
+    "http://localhost:3000",
+    "localhost:3000",
+    "http://localhost:3307",
+    "localhost:3307",
+]
 
 # CORSMiddleware => cross-origin requests
 # eg. requests that originate from a different protocol, IP address, domain name, or port
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    # allow_origins=origins,  # Allows all origins
+    allow_origins=["*"],  # Allows all origins
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
 )
 
 

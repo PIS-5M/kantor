@@ -1,0 +1,18 @@
+[project]
+name = "kantor"
+version = "1.0"
+authors = [
+  { name="Magdalena Czech" },
+  { name="Malgorzata Kozlowska", email="malgorzata.j.kozlowska@gmail.com" },
+  { name="Maria Polakowska" },
+  { name="Marta Sobol" },
+  { name="Magda Twarowska" },
+]
+description = "A currency exchange app implemented as a project for PIS/PIK course (at the Warsaw University of Technology)"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]

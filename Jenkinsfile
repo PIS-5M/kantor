@@ -8,7 +8,7 @@ pipeline {
                 }
             }
             steps {
-                sh './backend/create_python_package'
+                sh './backend/create_python_package.sh'
             }
         }
     }

@@ -34,7 +34,7 @@ def login(email, password):
         cursor = conn.cursor()
         # Wywolaj funkcje
         args = (email,)
-        cursor.execute(f"SELECT password, user_id from user where email=%s", args)
+        cursor.execute(f"SELECT password_hash, user_id from user where email=%s", args)
 
         # Pobierz wyniki
         result = cursor.fetchone()

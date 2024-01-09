@@ -18,8 +18,7 @@ pipeline {
 
       }
       steps {
-        pwd(tmp: true)
-        fileExists 'var/jenkins_home/workspace/kantor5M_main/backend/create_python_package.sh'
+        echo(pwd(tmp: true))
         sh 'cd var/jenkins_home/workspace/kantor5M_main/backend'
         sh './create_python_package'
       }

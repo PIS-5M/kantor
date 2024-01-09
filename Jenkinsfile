@@ -12,5 +12,5 @@ pipeline {
                 sh 'py.test /var/jenkins_home/workspace/kantor5M_main/test_trial_file.py'
             }
         }
-        }
     }
+}

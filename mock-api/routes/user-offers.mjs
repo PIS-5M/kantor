@@ -23,4 +23,17 @@ app.delete("/user-offers/:offer_id", (req, res) => {
   return res.sendStatus(200);
 });
 
+app.post("/user-offers", (req, res) => {
+  // user id autoryzacja!
+
+  OfferDB.data.push({
+    ...req.body,
+    status: "ACTIVE",
+    offer_id: OfferDB.data.length,
+    publication_date: new Date(),
+    last_modification_date: new Date(),
+  });
+  return res.sendStatus(201);
+});
+
 export { app as UserOffersRouter };

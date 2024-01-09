@@ -40,6 +40,9 @@ const OfferRow = ({ offer }) => {
       onSuccess: () => qc.invalidateQueries("userOffers"),
     }
   );
+
+  //TODO EDYCJA oferty
+
   const deleteOfferHandler = async () => {
     try {
       await mutateAsync();
@@ -73,7 +76,6 @@ const OfferRow = ({ offer }) => {
           </div>
         </td>
       )}
-      {/* <td>{offer.status}</td> */}
     </tr>
   );
 };
@@ -111,7 +113,6 @@ export const MyOffersTable = ({ type }) => {
           <th>Cena</th>
           <th>Numer konta</th>
           {type === "ACTIVE" && <th>Akcje</th>}
-          {/* <th>Status</th> */}
         </tr>
       </thead>
       <tbody ref={parent}>

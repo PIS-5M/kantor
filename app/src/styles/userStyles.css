@@ -1,0 +1,17 @@
+.rectangle{
+    background-color: #FEFBFB;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 26px;
+    border: 6px solid #2d428d;
+
+}
+
+.margin{
+    margin-left: auto;
+    margin-right: auto;
+}

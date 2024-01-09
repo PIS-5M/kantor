@@ -15,26 +15,26 @@ services:
       - "3306:3306" # Change the host port to 3307 or another unused port
     restart: unless-stopped
 
-  frontend:
-    build:
-      context: ./app
-    ports:
-      - "3000:3000"
-    depends_on:
-      - mysql-db
+  # frontend:
+  #   build:
+  #     context: ./app
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - mysql-db
 
-  backend:
-    build:
-      context: ./backend/src/backend
-    ports:
-      - "8000:8000"
-    environment:
-      DATABASE_HOST: mysql-db
-      DATABASE_USER: user
-      DATABASE_PASSWORD: password
-      DATABASE_NAME: kantor
-    depends_on:
-      - mysql-db
+  # backend:
+  #   build:
+  #     context: ./backend/src/backend
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     DATABASE_HOST: mysql-db
+  #     DATABASE_USER: user
+  #     DATABASE_PASSWORD: password
+  #     DATABASE_NAME: kantor
+  #   depends_on:
+  #     - mysql-db
 
 volumes:
   mysql-data:

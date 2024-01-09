@@ -3,10 +3,10 @@ import bcrypt
 
 # Ustawienia połączenia
 db_config = {
-    "host": "192.168.162.224",
-    "user": "root",
-    "password": "root",
-    "database": "kantor",
+    'host': 'localhost',
+    'user': 'root',
+    'password': 'root',
+    'database': 'kantor',
 }  # change password for correct
 
 
@@ -96,6 +96,26 @@ def get_all_currency():
         print(f"Błąd: {err}")
     finally:
         # Zamknij kursor i połączenie
+        if "cursor" in locals() and cursor is not None:
+            cursor.close()
+        if "conn" in locals() and conn.is_connected():
+            conn.close()
+
+
+
+def add_wallet(user_id, currency_id, account_number_hash):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        # Utworz obiekt kursora
+        cursor = conn.cursor()
+        # Wywolaj funkcje
+        args = (user_id, currency_id, account_number_hash)
+        cursor.execute(f"INSERT INTO `kantor`.`wallet` (`user_id`, `currency_id`, `account_number_hash`) VALUES (%s, %s, %s)", args)
+        cursor.execute("COMMIT;")
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+    finally:
+        # Zamknij kursor i polaczenie
         if "cursor" in locals() and cursor is not None:
             cursor.close()
         if "conn" in locals() and conn.is_connected():

@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build') { 
             steps {
-                sh './backend/create_python_package.sh' 
+                sh './backend/create_packages.sh' 
             }
         }
     stage('Test') {

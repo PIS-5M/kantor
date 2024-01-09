@@ -9,6 +9,7 @@ pipeline {
                 }
             }
             steps {
+                sh 'npm install'
                 sh './create_packages.sh' 
             }
         }

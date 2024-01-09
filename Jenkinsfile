@@ -1,17 +1,15 @@
 pipeline {
-  agent any
-  stages {
-    stage('Build') {
-      steps {
-        sh 'python3 --version'
-      }
+    agent none 
+    stages {
+        stage('Build') { 
+            agent {
+                docker {
+                    image 'python:3.12.1-alpine3.19'
+                }
+            }
+            steps {
+                sh './backend/create_python_package'
+            }
+        }
     }
-
-    stage('Test') {
-      steps {
-        echo '"Hello world!"'
-      }
-    }
-
-  }
 }

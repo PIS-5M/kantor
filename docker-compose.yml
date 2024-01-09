@@ -35,5 +35,5 @@ services:
       DATABASE_NAME: kantor
     depends_on:
       - mysql-db
-  volumes:
-    mysql-db:
+  # volumes:
+  #   mysql-db:

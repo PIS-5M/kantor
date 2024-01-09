@@ -81,13 +81,6 @@ CREATE TABLE `kantor`.`internal_transactions` (
   CONSTRAINT `insternal_transaction_fk` FOREIGN KEY (`wallet_id`) REFERENCES `wallet` (`wallet_id`)
 );
 
-USE `kantor`;
-CREATE  OR REPLACE VIEW `completed_offers` AS 
-SELECT * FROM offer_history WHERE remaining_value = 0;
-
-USE `kantor`;
-CREATE  OR REPLACE VIEW `uncompleted_offers` AS
-SELECT * FROM offer_history WHERE remaining_value > 0;
 
 
 

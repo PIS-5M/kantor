@@ -3,9 +3,9 @@ import bcrypt
 
 # Ustawienia polaczenia
 db_config = {
-    "host": "mysql-db",
-    "user": "kantor_user",
-    "password": "pis.kantor",
+    "host": "172.19.0.2",
+    "user": "root",
+    "password": "root",
     "database": "kantor",
 }  # change password for correct
 
@@ -34,7 +34,7 @@ def login(email, password):
         cursor = conn.cursor()
         # Wywolaj funkcje
         args = (email,)
-        cursor.execute(f"SELECT password, user_id from user where email=%s", args)
+        cursor.execute(f"SELECT password_hash, user_id from user where email=%s", args)
 
         # Pobierz wyniki
         result = cursor.fetchone()

@@ -4,9 +4,9 @@ import math
 
 # Ustawienia polaczenia
 db_config = {
-    "host": "0.0.0.0",
+    "host": "localhost",
     "user": "root",
-    "password": "root",
+    "password": "Mikato@12",
     "database": "kantor",
 }  # change password for correct
 
@@ -108,7 +108,8 @@ def new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_r
     offer_id = add_new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate)
     reverse_exchange_rate = math.floor(1 / exchange_rate * 100) / 100
     print(reverse_exchange_rate)
-    offer_match(offer_id, selled_currency_id, value, wanted_currency_id, reverse_exchange_rate)
+    match_offer = offer_match(offer_id, selled_currency_id, value, wanted_currency_id, reverse_exchange_rate)
+    return match_offer
 
 def offer_match(offer_id, selled_currency_id, value, wanted_currency_id, exchange_rate):
     offer_list = get_possible_match_offer_list(selled_currency_id, wanted_currency_id, exchange_rate)
@@ -136,6 +137,7 @@ def add_match_offers(earlier_offer_id, earlier_value, later_offer_id, later_valu
         cursor = conn.cursor()
         cursor.callproc('match_offers', (earlier_offer_id, later_offer_id, earlier_value, later_value))
         conn.commit()
+        return True
     except mysql.connector.Error as err:
         print(f"Blad: {err}")
     finally:

@@ -28,12 +28,12 @@ services:
       context: ./backend/src/backend
     ports:
       - "8000:8000"
-     environment:
-       DATABASE_HOST: mysql-db
-       DATABASE_USER: user
-       DATABASE_PASSWORD: password
-       DATABASE_NAME: kantor
-     depends_on:
-       - mysql-db
- volumes:
-   mysql-data:
+    environment:
+      DATABASE_HOST: mysql-db
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: kantor
+    depends_on:
+      - mysql-db
+  volumes:
+    mysql-data:

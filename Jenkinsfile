@@ -18,9 +18,8 @@ pipeline {
 
       }
       steps {
-        ls pwd(tmp: true)
-        sh 'cd var/jenkins_home/workspace/kantor5M_main@tmp/backend'
-        sh './create_python_package'
+        cat '/var/jenkins_home/workspace/kantor5M_main@tmp/durable-9d28de30/script.sh'
+        sh './var/jenkins_home/workspace/kantor5M_main/backend/create_python_package'
       }
     }
 

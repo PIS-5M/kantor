@@ -3,10 +3,10 @@ import bcrypt
 
 # Ustawienia połączenia
 db_config = {
-    "host": "192.168.162.224",
-    "user": "root",
-    "password": "root",
-    "database": "kantor",
+    'host': 'localhost',
+    'user': 'root',
+    'password': 'root',
+    'database': 'kantor',
 }  # change password for correct
 
 
@@ -100,3 +100,31 @@ def get_all_currency():
             cursor.close()
         if "conn" in locals() and conn.is_connected():
             conn.close()
+
+
+def get_user_data(id):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        # Utwórz obiekt kursora
+        cursor = conn.cursor()
+        # Wywołaj funkcję
+        args = (id,)
+        cursor.execute(f"SELECT name, surname, email from user where user_id=%s", args)
+
+        # Pobierz wyniki
+        result = cursor.fetchone()
+        if result:
+            print(result)
+            return result
+        else:
+            # Użytkownik nie istnieje
+            return None, None, None
+    except mysql.connector.Error as err:
+        print(f"Błąd: {err}")
+    finally:
+        # Zamknij kursor i połączenie
+        if "cursor" in locals() and cursor is not None:
+            cursor.close()
+        if "conn" in locals() and conn.is_connected():
+            conn.close()
+

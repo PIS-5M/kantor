@@ -19,7 +19,7 @@ pipeline {
       }
       steps {
         echo(pwd(tmp: true))
-        sh 'cd var/jenkins_home/workspace/kantor5M_main/backend'
+        sh 'cd var/jenkins_home/workspace/kantor5M_main@tmp/backend'
         sh './create_python_package'
       }
     }

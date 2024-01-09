@@ -6,8 +6,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: kantor
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_USER: kantor_user
+      MYSQL_PASSWORD: pis.kantor
     volumes:
       - ./sql:/docker-entrypoint-initdb.d # Adjust this path to where your 'sql' directory is located on the host machine
       - mysql-data:/var/lib/mysql

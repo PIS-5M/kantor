@@ -11,7 +11,7 @@ import Home from "./views/Home";
 import Login from "./views/Login";
 
 import "./styles/headerStyles.css";
-import clientToken from "./ClientToken";
+// import clientToken from "./ClientToken";
 import { TransactionsHistory } from "./views/TransactionsHistory";
 import { MyOffers } from "./views/MyOffers";
 import { Toaster } from "react-hot-toast";
@@ -20,7 +20,9 @@ import { CreateOffer } from "./views/CreateOffer";
 import { AllOffers } from "./views/AllOffers";
 
 function App() {
-  const { userId } = clientToken();
+  // const { userId } = clientToken();
+  const { userId } = 1;
+
   return (
     <div className="font-sans">
       <Toaster />

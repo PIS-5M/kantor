@@ -11,6 +11,7 @@ pipeline {
             steps {
                 sh '''
               cd /var/jenkins_home/workspace/kantor5M_main/backend
+              #!/bin/bash
               show_help() {
                 echo "Usage: $0 [nv]"
                 echo "  nv: Increments the first digit of the version and reset the second digit to 0. Used to release major update - a new version of the project."

@@ -13,6 +13,7 @@ services:
       - mysql-data:/var/lib/mysql
     ports:
       - "3306:3306" # Change the host port to 3307 or another unused port
+    command: --bind-address=0.0.0.0  # Bind MySQL to all available network interfaces
     restart: unless-stopped
 
   frontend:

@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, FormFeedback, Input, Label } from "reactstrap";
-import { offerSchema } from "./OffersTable";
+import { offerSchema } from "./MyOffersTable";
 import { SelectCurrency } from "./SelectCurrency";
 import { useMutation, useQueryClient } from "react-query";
 import toast from "react-hot-toast";

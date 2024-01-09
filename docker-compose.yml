@@ -1,39 +1,41 @@
 version: "3.8"
 
 services:
-  # mysql-db:
-  # image: mysql:latest
-  # environment:
-  #   MYSQL_ROOT_PASSWORD: root
-  #   MYSQL_DATABASE: kantor
-  #   MYSQL_USER: user
-  #   MYSQL_PASSWORD: password
-  # volumes:
-  #   - ./sql:/docker-entrypoint-initdb.d # Adjust this path to where your 'sql' directory is located on the host machine
-  #   - mysql-data:/var/lib/mysql
-  # ports:
-  #   - "3306:3306" # Change the host port to 3307 or another unused port
-  # restart: unless-stopped
+  mysql-db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: kantor
+      MYSQL_USER: kantor_user
+      MYSQL_PASSWORD: ''
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d # Adjust this path to where your 'sql' directory is located on the host machine
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306" # Change the host port to 3307 or another unused port
+    command: --bind-address=0.0.0.0  # Bind MySQL to all available network interfaces
+    restart: unless-stopped
 
   frontend:
     build:
       context: ./app
     ports:
       - "3000:3000"
-    # depends_on:
-    #   - mysql-db
+    depends_on:
+      - mysql-db
 
   backend:
     build:
       context: ./backend/src/backend
     ports:
       - "8000:8000"
-    # environment:
-    #   DATABASE_HOST: mysql-db
-    #   DATABASE_USER: user
-    #   DATABASE_PASSWORD: password
-    #   DATABASE_NAME: kantor
-    # depends_on:
-    #   - mysql-db
-# volumes:
-#   mysql-data:
+    environment:
+      DATABASE_HOST: mysql-db
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: kantor
+    depends_on:
+      - mysql-db
+
+volumes:
+  mysql-data:

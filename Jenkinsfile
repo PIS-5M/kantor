@@ -18,8 +18,7 @@ pipeline {
 
       }
       steps {
-        cat '/var/jenkins_home/workspace/kantor5M_main@tmp/durable-9d28de30/script.sh'
-        sh './var/jenkins_home/workspace/kantor5M_main/backend/create_python_package'
+        sh './var/jenkins_home/workspace/kantor5M_main/create_packages.sh'
       }
     }
 

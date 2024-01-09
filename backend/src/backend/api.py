@@ -85,3 +85,11 @@ async def add_to_wallet(data: dict):
     value = data["value"]
     database.wallet_add(wallet_id, value)
     return {"message": "Succesfully added to wallet"}
+
+
+@app.post("/wallet_subtract")
+async def add_to_wallet(data: dict):
+    wallet_id = data["wallet_id"]
+    value = data["value"]
+    database.wallet_subtract(wallet_id, value)
+    return {"message": "Succesfully subtracted from wallet"}

@@ -10,13 +10,13 @@ import clientToken from "../ClientToken";
 import z from "zod";
 import { DialogMatches } from "./DialogMatches";
 
-export const newOfferSchema = {
+export const newOfferSchema = z.object({
   // submit danych w takiej formie bedzie
   value: z.coerce.number().positive(),
   currency: currencySchema, // currency obj -> {id + abbr}
   wanted_currency: currencySchema,
   exchange_rate: z.coerce.number().positive(),
-};
+});
 
 const defaultValues = {
   value: 0,

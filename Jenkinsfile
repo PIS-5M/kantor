@@ -18,7 +18,8 @@ pipeline {
 
       }
       steps {
-        sh './var/jenkins_home/workspace/kantor5M_main/create_packages.sh'
+        sh 'cd var/jenkins_home/workspace/kantor5M_main'
+        sh './create_packages.sh'
       }
     }
 

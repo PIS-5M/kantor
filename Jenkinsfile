@@ -21,7 +21,7 @@ fi
 
 # Uruchom skrypt w podkatalogu ./backend
 echo "Uruchamiam skrypt do tworzenia paczki backendu w podkatalogu./backend..."
-(chmod +x /var/jenkins_home/workspace/kantor5M_main/create_python_package.sh && ./var/jenkins_home/workspace/kantor5M_main/create_python_package.sh "$PARAMETER")
+(chmod +x /var/jenkins_home/workspace/kantor5M_main/backend/create_python_package.sh && ./var/jenkins_home/workspace/kantor5M_main/backend/create_python_package.sh "$PARAMETER")
 
 # Uruchom skrypt w podkatalogu ./app
 echo "Uruchamiam skrypt do tworzenia paczki frontendu w podkatalogu ./app..."

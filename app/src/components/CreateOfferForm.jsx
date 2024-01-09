@@ -11,11 +11,10 @@ import z from "zod";
 import { DialogMatches } from "./DialogMatches";
 
 export const newOfferSchema = z.object({
-  // submit danych w takiej formie bedzie
-  value: z.coerce.number().positive(),
-  currency: currencySchema, // currency obj -> {id + abbr}
-  wanted_currency: currencySchema,
-  exchange_rate: z.coerce.number().positive(),
+  value: z.number().positive(),
+  currency: z.number().positive(), // Expecting currency ID as a number
+  wanted_currency: z.number().positive(), // Expecting wanted currency ID as a number
+  exchange_rate: z.number().positive(),
 });
 
 const defaultValues = {
@@ -140,10 +139,11 @@ export const CreateOfferForm = () => {
                 invalid={!!formState.errors.currency?.currency_id}
                 id="currency"
                 onChange={(event) => {
-                  field.onChange(JSON.parse(event.target.value));
+                  // Directly pass the number value
+                  field.onChange(Number(event.target.value));
                 }}
                 name={field.name}
-                value={JSON.stringify(field.value)}
+                value={field.value}
               />
             )}
           />
@@ -161,10 +161,11 @@ export const CreateOfferForm = () => {
                 invalid={!!formState.errors.wanted_currency?.currency_id}
                 id="wanted_currency"
                 onChange={(event) => {
-                  field.onChange(JSON.parse(event.target.value));
+                  // Directly pass the number value
+                  field.onChange(Number(event.target.value));
                 }}
                 name={field.name}
-                value={JSON.stringify(field.value)}
+                value={field.value}
               />
             )}
           />

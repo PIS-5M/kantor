@@ -73,7 +73,7 @@ async def email_used(data: dict):
     return {"message": False}
 
 
-@app.post("/all_currency")
+@app.get("/all_currency")
 async def get_all_currency():
     currency = database.get_all_currency()
     return {"currency": currency}

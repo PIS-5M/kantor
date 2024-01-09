@@ -6,7 +6,7 @@ import math
 db_config = {
     "host": "localhost",
     "user": "root",
-    "password": "Mikato@12",
+    "password": "*****",
     "database": "kantor",
 }  # change password for correct
 

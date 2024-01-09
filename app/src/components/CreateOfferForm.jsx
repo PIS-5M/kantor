@@ -8,10 +8,10 @@ import { useMutation, useQueryClient } from "react-query";
 import toast from "react-hot-toast";
 import clientToken from "../ClientToken";
 import z from "zod";
+import { DialogMatches } from "./DialogMatches";
 
 export const newOfferSchema = {
   // submit danych w takiej formie bedzie
-  user_id: z.coerce.number().positive(),
   value: z.coerce.number().positive(),
   currency: currencySchema, // currency obj -> {id + abbr}
   wanted_currency: currencySchema,
@@ -19,7 +19,6 @@ export const newOfferSchema = {
 };
 
 const defaultValues = {
-  user_id: 0,
   value: 0,
   currency: {
     currency_id: -1,
@@ -38,30 +37,63 @@ export const CreateOfferForm = () => {
     defaultValues,
   });
 
+  const [dialogData, setDialogData] = React.useState(null); // display matching offers that were found
+
   const qc = useQueryClient();
   const { mutateAsync, isLoading } = useMutation(
-    "userOffers",
-    (values) =>
-      fetch("http://localhost:8000/user-offers", {
+    async (dataToSend) => {
+      return fetch("http://localhost:8000/add_offer", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
-      }).then((res) => res.json()),
+        body: JSON.stringify(dataToSend),
+      }).then((res) => res.json());
+    },
     {
-      onSuccess: () => qc.invalidateQueries("userOffers"),
+      onSuccess: () => {
+        qc.invalidateQueries("userOffers");
+        // toast.success("Pomyślnie utworzono ofertę!");
+      },
+      onError: () => {
+        toast.error("Nie udało się dodać oferty.");
+      },
     }
   );
 
   const submitHandler = async (values) => {
-    console.log(`Submitted values :\n ${JSON.stringify(values, null, 2)}`);
+    const user_id = clientToken().userId();
+
+    if (!user_id) {
+      toast.error("User ID is not available");
+      return;
+    }
+
     try {
-      mutateAsync(values);
-      toast.success("Pomyślnie utworzono ofertę! 😎");
+      const selledCurrency = currencySchema.parse(JSON.parse(values.currency));
+      const wantedCurrency = currencySchema.parse(
+        JSON.parse(values.wanted_currency)
+      );
+
+      const dataToSend = {
+        user_id,
+        selled_currency_id: selledCurrency.currency_id,
+        value: values.value,
+        wanted_currency_id: wantedCurrency.currency_id,
+        exchange_rate: values.exchange_rate,
+      };
+
+      const response = await mutateAsync(dataToSend);
+
+      if (response.matches) {
+        console.log("Matches:", response.matches);
+        toast.success("Oferta została dodana!");
+        //JSON.stringify(response.matches)
+        setDialogData(response.matches); // ustawiona flaga ze sa matche
+      }
     } catch (e) {
       console.error(e);
-      toast.error("Nie udało się dodać oferty 😢");
+      // toast.error("Nie udało się dodać oferty");
     }
   };
 
@@ -75,14 +107,15 @@ export const CreateOfferForm = () => {
             name="value"
             render={({ field }) => (
               <Input
+                // {...field} // mozna
                 placeholder="np. 4500"
                 invalid={!!formState.errors.value}
                 id="value"
+                inputMode="numeric"
                 onChange={field.onChange}
                 onBlur={field.onBlur}
                 name={field.name}
                 value={field.value}
-                inputMode="numeric"
               />
             )}
           />
@@ -164,6 +197,13 @@ export const CreateOfferForm = () => {
           {isLoading ? "Wczytywanie..." : "Dodaj"}
         </Button>
       </Form>
+
+      {dialogData && (
+        <DialogMatches
+          data={dialogData}
+          onClose={() => setDialogData(null)} // Method to close the dialog
+        />
+      )}
     </div>
   );
 };

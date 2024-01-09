@@ -23,7 +23,7 @@ pipeline {
             fi
             
             # Odczytaj obecną wersję z pliku pyproject.toml
-            current_version=1.0
+            current_version="1.0"
             
             # Inkrementuj pierwszą cyfrę i zresetuj drugą cyfrę do 0
             if [ "$1" == "nv" ]; then

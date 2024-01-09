@@ -6,13 +6,14 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: kantor
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_USER: kantor_user
+      MYSQL_PASSWORD: ''
     volumes:
       - ./sql:/docker-entrypoint-initdb.d # Adjust this path to where your 'sql' directory is located on the host machine
       - mysql-data:/var/lib/mysql
     ports:
-      - "3307:3306" # Change the host port to 3307 or another unused port
+      - "3306:3306" # Change the host port to 3307 or another unused port
+    command: --bind-address=0.0.0.0  # Bind MySQL to all available network interfaces
     restart: unless-stopped
 
   frontend:

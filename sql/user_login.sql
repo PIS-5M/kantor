@@ -10,7 +10,7 @@ RETURNS bool
 
 BEGIN
 declare u_id int;
-SELECT user_id into u_id from user where login=u_login and password=u_password;
+SELECT user_id into u_id from user where login=u_login and password_hash=u_password;
 RETURN u_id;
 END$$
 

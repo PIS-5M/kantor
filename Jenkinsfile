@@ -21,6 +21,7 @@ pipeline {
                 sh '''
               pwd ls -l
               cd /var/jenkins_home/workspace/kantor5M_main
+              chmod +x create_packages.sh
               sh './create_packages.sh'
                 ''' 
             }

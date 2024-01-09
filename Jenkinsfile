@@ -19,6 +19,7 @@ pipeline {
       }
             steps {
                 sh '''
+              pwd ls -l
               cd /var/jenkins_home/workspace/kantor5M_main
               sh './create_packages.sh'
                 ''' 

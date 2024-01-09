@@ -2,20 +2,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, FormFeedback, Input, Label } from "reactstrap";
-import { offerSchema } from "./MyOffersTable";
+import { currencySchema } from "./MyOffersTable";
 import { SelectCurrency } from "./SelectCurrency";
 import { useMutation, useQueryClient } from "react-query";
 import toast from "react-hot-toast";
+import clientToken from "../ClientToken";
+import z from "zod";
 
-export const newOfferSchema = offerSchema.pick({
-  value: true,
-  currency: true,
-  wanted_currency: true,
-  exchange_rate: true,
-  account_number: true,
-});
+export const newOfferSchema = {
+  // submit danych w takiej formie bedzie
+  user_id: z.coerce.number().positive(),
+  value: z.coerce.number().positive(),
+  currency: currencySchema, // currency obj -> {id + abbr}
+  wanted_currency: currencySchema,
+  exchange_rate: z.coerce.number().positive(),
+};
 
 const defaultValues = {
+  user_id: 0,
   value: 0,
   currency: {
     currency_id: -1,
@@ -26,7 +30,6 @@ const defaultValues = {
     abbreviation: "",
   },
   exchange_rate: 0,
-  account_number: "",
 };
 
 export const CreateOfferForm = () => {
@@ -34,6 +37,7 @@ export const CreateOfferForm = () => {
     resolver: zodResolver(newOfferSchema),
     defaultValues,
   });
+
   const qc = useQueryClient();
   const { mutateAsync, isLoading } = useMutation(
     "userOffers",
@@ -151,29 +155,7 @@ export const CreateOfferForm = () => {
             {formState.errors.exchange_rate?.message}
           </FormFeedback>
         </div>
-        <div>
-          <Label htmlFor="account_number">
-            Jaki numer konta do tej transakcji?
-          </Label>
-          <Controller
-            control={control}
-            name="account_number"
-            render={({ field }) => (
-              <Input
-                placeholder="np. 12123434555566667777888899"
-                invalid={!!formState.errors.account_number}
-                id="account_number"
-                onChange={field.onChange}
-                onBlur={field.onBlur}
-                name={field.name}
-                value={field.value}
-              />
-            )}
-          />
-          <FormFeedback invalid="true">
-            {formState.errors.account_number?.message}
-          </FormFeedback>
-        </div>
+
         <Button
           className="w-full mt-4 bg-blue-700 hover:bg-blue-700/90 disabled:opacity-50"
           type="submit"

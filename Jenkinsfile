@@ -11,7 +11,7 @@ pipeline {
             steps {
                 sh '''
               cd /var/jenkins_home/workspace/kantor5M_main/backend
-              sh ./create_packages.sh
+              sh ./create_python_package.sh
                 ''' 
             }
         }

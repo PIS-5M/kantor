@@ -22,7 +22,8 @@ pipeline {
               pwd ls -l
               cd /var/jenkins_home/workspace/kantor5M_main
               ls -a /var/jenkins_home/workspace/kantor5M_main
-              cd /backend
+              pwd ls -l
+              cd /var/jenkins_home/workspace/kantor5M_main/backend
               pwd ls -l
               chmod +x create_packages.sh
               pwd ls -l

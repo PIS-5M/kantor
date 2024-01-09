@@ -5,7 +5,7 @@ import bcrypt
 db_config = {
     "host": "172.19.0.2",
     "user": "kantor_user",
-    "password": "pis.kantor",
+    "password": "",
     "database": "kantor",
 }  # change password for correct
 

@@ -88,5 +88,8 @@ async def add_new_wallet(data: dict):
     hashed_account = bcrypt.hashpw(account.encode("utf-8"), bcrypt.gensalt())
     hashed_account_string = hashed_account.decode("utf-8")
 
-    database.add_wallet(user_id, currency_id, hashed_account_string)
-    return {"message": "Succesfully added wallet"}
+    result = database.add_wallet(user_id, currency_id, hashed_account_string)
+    if result:
+        return {"message": "Succesfully added wallet"}
+    raise HTTPException(status_code=400, detail="Użytkownik już ma taki portfel")
+

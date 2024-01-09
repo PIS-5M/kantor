@@ -4,8 +4,8 @@ import bcrypt
 # Ustawienia polaczenia
 db_config = {
     "host": "172.19.0.2",
-    "user": "kantor_user",
-    "password": "",
+    "user": "root",
+    "password": "root",
     "database": "kantor",
 }  # change password for correct
 

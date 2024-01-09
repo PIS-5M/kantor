@@ -19,9 +19,13 @@ import { CreateOffer } from "./views/CreateOffer";
 // import { CreateOfferForm } from "./components/CreateOfferForm";
 import { AllOffers } from "./views/AllOffers";
 
+function mockToken() {
+  return 1;
+}
+
 function App() {
   // const { userId } = clientToken();
-  const { userId } = 1;
+  const { userId } = mockToken();
 
   return (
     <div className="font-sans">

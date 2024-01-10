@@ -41,8 +41,6 @@ const OfferRow = ({ offer }) => {
     }
   );
 
-  //TODO EDYCJA oferty
-
   const deleteOfferHandler = async () => {
     try {
       await mutateAsync();
@@ -63,9 +61,9 @@ const OfferRow = ({ offer }) => {
       {offer.status === "ACTIVE" && (
         <td>
           <div className="flex mx-2 gap-4">
-            <button className="flex items-center hover:bg-blue-100 px-2 py-1 rounded">
+            {/* <button className="flex items-center hover:bg-blue-100 px-2 py-1 rounded">
               <Edit className="w-4 h-4 mr-2" /> Edytuj
-            </button>
+            </button> */}
             <button
               disabled={isLoading}
               onClick={deleteOfferHandler}
@@ -86,11 +84,17 @@ const OfferRow = ({ offer }) => {
 export const MyOffersTable = ({ type }) => {
   const [parent] = useAutoAnimate();
   const { userId } = clientToken();
+
   const { data, isLoading, error } = useQuery("userOffers", () =>
-    fetch("http://localhost:8000/user-offers", {
+    fetch(`http://localhost:8000/get_offer_details/${userId}`, {
       headers: { Authorization: `Bearer: ${userId()}` },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
       .then((resJson) => userOffersResponseSchema.parse(resJson))
   );
 

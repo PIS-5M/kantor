@@ -418,3 +418,24 @@ def test_get_transactions_error(mocker):
 
     with pytest.raises(Exception, match='Database error'):
         db.get_transactions(1)
+
+
+def test_registration(mocker):
+    # Mock the cursor and execute method
+    mocker.patch('backend.database.mysql.connector.connect')
+    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
+    mock_cursor.fetchall.return_value = ()
+
+    # Wywołanie funkcji
+    result = db.registration("pass_hash", "name", "surname", "mail")
+
+
+
+def test_registration_error(mocker):
+    # Mock the cursor and execute method to raise an exception
+    mocker.patch('backend.database.mysql.connector.connect')
+    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
+    mock_cursor.execute.side_effect = Exception('Database error')
+
+    with pytest.raises(Exception, match='Database error'):
+        result = db.registration("pass_hash", "name", "surname", "mail")

@@ -20,3 +20,18 @@ def get_all_currency():
 
     except httpx.HTTPError as e:
         return {"error": f"HTTP error occurred: {e}"}
+
+def get_uncompleted_offers():
+    url = "http://localhost:8000/get_uncompleted_offers"
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = httpx.post(url, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            return data['offers']
+        else:
+            return {"error": response}
+
+    except httpx.HTTPError as e:
+        return {"error": f"HTTP error occurred: {e}"}

@@ -60,7 +60,7 @@ export const CreateOfferForm = () => {
 
   const submitHandler = async (data) => {
     const offerData = {
-      user_id: clientToken().userId,
+      user_id: clientToken().userId(),
       selled_currency_id: data.currency,
       value: data.value,
       wanted_currency_id: data.wanted_currency,

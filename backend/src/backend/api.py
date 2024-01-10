@@ -154,7 +154,7 @@ async def user_offers(seller_id: int):
             "wanted_currency": result["wanted_currency_id"],
             "exchange_rate": result["exchange_rate"],
             "account_number": result["account_number_hash"],
-            "status": "Cancelled" if result["is_cancelled"] else "Active",
+            "status": "CLOSED" if result["is_cancelled"] else "ACTIVE",
         }
 
         # Append the offer_details to the list

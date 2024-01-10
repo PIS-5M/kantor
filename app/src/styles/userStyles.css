@@ -1,0 +1,44 @@
+.rectangle{
+    background-color: #FEFBFB;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 26px;
+    border: 6px solid #2d428d;
+
+}
+
+.margin{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.inputStyleAcc {
+    border: 2px solid #2F4CB2;
+    width: 350px;
+    height: 40px;
+    border-radius: 8px;
+    text-align: center;
+    justify-content: center;
+}
+
+.cancelButton {
+    background: #424550;
+    box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.25);
+    border-radius: 26px;
+    width: 150px;
+    margin-top: 30px;
+    height: 60px;
+}
+
+.addButton {
+    background: #ebecf2;
+    box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.25);
+    border-radius: 26px;
+    width: 150px;
+    margin-top: 30px;
+    height: 60px;
+}

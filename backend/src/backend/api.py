@@ -137,3 +137,20 @@ async def delete_offer(offer_id: int):
     except DatabaseError:
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
+
+@app.get("/user-transactions")
+async def get_user_transactions(user_id: int):
+
+    transactions = database.get_transactions(user_id)
+
+    # # POBRANIE Z BAZY DANYCH
+    # transactions = [
+    #     {
+    #         "transaction_id": 1,
+    #         "value": -100.00,
+    #         "value_currency_name": "USD",
+    #         "bank_account": "123456789",
+    #     },
+    # ]
+
+    return {"transactions": transactions}

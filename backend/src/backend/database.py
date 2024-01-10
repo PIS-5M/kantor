@@ -4,7 +4,7 @@ import math
 
 # Ustawienia polaczenia
 db_config = {
-    "host": "172.19.0.2",
+    "host": "localhost",
     "user": "root",
     "password": "root",
     "database": "kantor",
@@ -122,6 +122,13 @@ def get_user_data(id):
             return None, None, None
     except mysql.connector.Error as err:
         print(f"Błąd: {err}")
+    finally:
+        # Zamknij kursor i polaczenie
+        if "cursor" in locals() and cursor is not None:
+            cursor.close()
+        if "conn" in locals() and conn.is_connected():
+            conn.close()
+
 
 def add_wallet(user_id, currency_id, account_number_hash):
     conn = mysql.connector.connect(**db_config)
@@ -296,6 +303,41 @@ def delete_offer(offer_id):
     except mysql.connector.Error as err:
         print(f"Error: {err}")
         raise DatabaseError(message="Database error occurred")
+    finally:
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
+
+
+
+def get_transactions(id):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        cursor = conn.cursor()
+        args = (id,)
+        cursor.execute(f"select transaction_id, value, name, account_number_hash from transaction t join wallet w on t.wallet_id = w.wallet_id join currency c on w.currency_id = c.currency_id where w.user_id = %s", args)
+
+        result = cursor.fetchall()
+
+        args = (id,)
+        cursor.execute(f"select internal_transactions_id, value, name, account_number_hash from internal_transactions t join wallet w on t.wallet_id = w.wallet_id join currency c on w.currency_id = c.currency_id where w.user_id = %s", args)
+
+        result.extend(cursor.fetchall())
+        end_data = []
+        for data in result:
+            print(data)
+            end_data.append(
+                {
+                    "transaction_id": data[0],
+                    "value": data[1],
+                    "value_currency_name": data[2],
+                    "bank_account": "1234567891234567"
+                }
+            )
+        return end_data
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
     finally:
         if 'cursor' in locals() and cursor is not None:
             cursor.close()

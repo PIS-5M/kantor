@@ -116,3 +116,9 @@ async def add_new_wallet(data: dict):
         return {"message": "Succesfully added wallet"}
     raise HTTPException(status_code=400, detail="Użytkownik już ma taki portfel")
 
+
+@app.post("/show_wallet")
+async def show_wallet(data: dict):
+    user_id = data["user_id"]
+    wallet = database.get_wallet(user_id)
+    return {"wallet": wallet}

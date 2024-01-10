@@ -7,7 +7,7 @@ import { useQuery } from "react-query";
 const transactionEntrySchema = z.object({
   transaction_id: z.number(),
   value: z.number(),
-  value_currency_name: z.string().length(3),
+  value_currency_name: z.string(),
   bank_account: z.string(),
 });
 

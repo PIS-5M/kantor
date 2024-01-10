@@ -80,6 +80,7 @@ async def get_all_currency():
     return {"currency": currency}
 
 
+
 @app.post("/user_data")
 async def user_data(data: dict):
     id = data["id"]
@@ -178,3 +179,20 @@ async def get_user_transactions(user_id: int):
     # ]
 
     return {"transactions": transactions}
+
+@app.post("/wallet_add")
+async def add_to_wallet(data: dict):
+    wallet_id = data["wallet_id"]
+    value = data["value"]
+    database.wallet_add(wallet_id, value)
+    return {"message": "Succesfully added to wallet"}
+
+
+@app.post("/wallet_subtract")
+async def add_to_wallet(data: dict):
+    wallet_id = data["wallet_id"]
+    value = data["value"]
+    result = database.wallet_subtract(wallet_id, value)
+    if result:
+        return {"message": "Succesfully subtracted from wallet"}
+    raise HTTPException(status_code=400, detail="Za mało pieniędzy w portfelu")

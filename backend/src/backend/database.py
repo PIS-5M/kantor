@@ -378,6 +378,25 @@ def delete_offer(offer_id):
         print(f"Error: {err}")
         raise DatabaseError(message="Database error occurred")
     finally:
+        # Zamknij kursor i polaczenie
+        if "cursor" in locals() and cursor is not None:
+            cursor.close()
+        if "conn" in locals() and conn.is_connected():
+            conn.close()
+
+def wallet_add(wallet_id, value):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        # Utworz obiekt kursora
+        cursor = conn.cursor()
+        # Wywolaj funkcje
+        args = (wallet_id, value)
+        cursor.execute(f"INSERT INTO `kantor`.`transaction` (`wallet_id`, value) VALUES (%s, %s);", args)
+        cursor.execute("COMMIT;")
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+    finally:
+        # Zamknij kursor i polaczenie
         if "cursor" in locals() and cursor is not None:
             cursor.close()
         if "conn" in locals() and conn.is_connected():
@@ -417,6 +436,32 @@ def get_transactions(id):
     except mysql.connector.Error as err:
         print(f"Error: {err}")
     finally:
+        # Zamknij kursor i polaczenie
+        if "cursor" in locals() and cursor is not None:
+            cursor.close()
+        if "conn" in locals() and conn.is_connected():
+            conn.close()
+
+def wallet_subtract(wallet_id, value):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        # Utworz obiekt kursora
+        cursor = conn.cursor()
+        # Wywolaj funkcje
+        args = (wallet_id,)
+        cursor.execute(f"select value_in_wallet from money_in_wallet where wallet_id = %s", args)
+        max_sum = cursor.fetchone()
+        if value > max_sum[0]:
+            return False
+
+        args = (wallet_id, -value)
+        cursor.execute(f"INSERT INTO `kantor`.`transaction` (`wallet_id`, value) VALUES (%s, %s);", args)
+        cursor.execute("COMMIT;")
+        return True
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+    finally:
+        # Zamknij kursor i polaczenie
         if "cursor" in locals() and cursor is not None:
             cursor.close()
         if "conn" in locals() and conn.is_connected():

@@ -3,7 +3,7 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, FormFeedback, Input, Label } from "reactstrap";
 import { SelectCurrency } from "./SelectCurrency";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import toast from "react-hot-toast";
 import clientToken from "../ClientToken";
 import z from "zod";

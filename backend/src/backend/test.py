@@ -297,7 +297,7 @@ def test_user_offers_success(mocker):
             "abbreviation": "USD",
         },
         "wanted_currency_id": {
-            "currency_id": 1,
+            "currency_id": 2,
             "abbreviation": "EUR",
         },
         "exchange_rate": 1.5,

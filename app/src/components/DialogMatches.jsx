@@ -20,7 +20,7 @@ export const DialogMatches = ({ isOpen, data, toggle }) => {
           )}
         </ModalBody>
         <ModalFooter>
-          <Button color="secondary" onClick={toggle}>
+          <Button color="primary" onClick={toggle}>
             Zamknij
           </Button>
         </ModalFooter>

@@ -145,11 +145,11 @@ def offer_match(offer_id, selled_currency_id, value, wanted_currency_id, exchang
     while remaining_value > 0 and offer_list:
         best_offer = min(offer_list, key=lambda x: (x[7], x[2]))
         offer_list.remove(best_offer)
-        match_wanted_money = math.floor(best_offer[5] * best_offer[7] * 100 ) / 100
+        match_wanted_money = math.floor(best_offer[8] * best_offer[7] * 100 ) / 100
         if match_wanted_money <= remaining_value:
-            add_match_offers(best_offer[0], best_offer[5], offer_id, match_wanted_money)
+            add_match_offers(best_offer[0], best_offer[8], offer_id, match_wanted_money)
             remaining_value -= match_wanted_money
-            match_list.append([match_wanted_money, best_offer[5]]) # [kwota sprzedana (ile chce zmaczowany), kwota kupiona(ile wystawil zmaczowany)]
+            match_list.append([match_wanted_money, best_offer[8]]) # [kwota sprzedana (ile chce zmaczowany), kwota kupiona(ile wystawil zmaczowany)]
         else:
             reverse_exchange_rate = math.floor(1 / exchange_rate * 100) / 100
             match_money = math.floor(reverse_exchange_rate * remaining_value * 100) / 100

@@ -187,14 +187,14 @@ def test_offer_match(mocker):
 def test_offer_match_2(mocker):
     offer_id = 1
     selled_currency_id = 2
-    value = 50.0
+    value = 20.0
     wanted_currency_id = 3
     exchange_rate = 2.0
     mocker.patch('backend.database.mysql.connector.connect')
     mocker.patch('backend.database.get_possible_match_offer_list', return_value=[(1, datetime.datetime(2024, 1, 9, 16, 11, 27), None, 1, 2, 200.0, 3, 0.5, 100.0, 0)])  # Możesz dostosować wartości zwracane do swojego testu
     mocker.patch('backend.database.add_match_offers', return_value=True)
     result = db.offer_match(offer_id, selled_currency_id, value, wanted_currency_id, exchange_rate)
-    assert result == [[50.0, 25.0]]
+    assert result == [[20.0, 10.0]]
 
 def test_new_offer_with_match(mocker):
     user_id = 1

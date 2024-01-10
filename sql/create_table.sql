@@ -22,6 +22,7 @@ CREATE TABLE `kantor`.`wallet` (
   `wallet_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int unsigned NOT NULL,
   `currency_id` int unsigned NOT NULL,
+  `account_number_hash` varchar(100) NOT NULL,
   PRIMARY KEY (`wallet_id`),
   KEY `user_wallet_idx` (`user_id`),
   KEY `currency_wallet_fk_idx` (`currency_id`),
@@ -65,7 +66,6 @@ CREATE TABLE `kantor`.`matched_offers` (
 CREATE TABLE `kantor`.`transaction` (
   `transaction_id` int unsigned NOT NULL AUTO_INCREMENT,
   `wallet_id` int unsigned NOT NULL,
-  `client_account_number` varchar(26) NOT NULL,
   `value` decimal(20,2) NOT NULL,
   PRIMARY KEY (`transaction_id`),
   KEY `wallet_transaction_idx` (`wallet_id`),

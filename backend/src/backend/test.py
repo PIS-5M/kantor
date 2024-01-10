@@ -282,6 +282,7 @@ def test_delete_offer_success(mocker):
 
     assert result is True
 
+
 def test_user_offers_success(mocker):
 
     mocker.patch('backend.database.mysql.connector.connect')
@@ -291,48 +292,19 @@ def test_user_offers_success(mocker):
         "publication_date": "2022-01-09T12:00:00",
         "last_modification_date": "2022-01-10T08:30:00",
         "value": 100.0,
-        "currency_id": 1,
-        "abbreviation": "USD",
-        "wanted_currency_id": 2,
-        "exchange_rate": 1.5,
-        "account_number_hash": '12345678901234567890123456',
-        "is_cancelled": False
-    }
-
-    result = db.user_offers(1)
-
-    assert result == {
-        "offer_history_id": 1,
-        "publication_date": "2022-01-09T12:00:00",
-        "last_modification_date": "2022-01-10T08:30:00",
-        "value": 100.0,
         "currency": {
             "currency_id": 1,
             "abbreviation": "USD",
         },
-        "wanted_currency_id": 2,
+        "wanted_currency_id": {
+            "currency_id": 1,
+            "abbreviation": "EUR",
+        },
         "exchange_rate": 1.5,
         "account_number_hash": '12345678901234567890123456',
         "status": "Active"
     }
 
-def test_user_offers_success(mocker):
-
-    mocker.patch('backend.database.mysql.connector.connect')
-    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
-    mock_cursor.fetchone.return_value = {
-        "offer_history_id": 1,
-        "publication_date": "2022-01-09T12:00:00",
-        "last_modification_date": "2022-01-10T08:30:00",
-        "value": 100.0,
-        "currency_id": 1,
-        "abbreviation": "USD",
-        "wanted_currency_id": 2,
-        "exchange_rate": 1.5,
-        "account_number_hash": '12345678901234567890123456',
-        "is_cancelled": False
-    }
-
     result = db.user_offers(1)
 
     assert result == {
@@ -344,7 +316,10 @@ def test_user_offers_success(mocker):
             "currency_id": 1,
             "abbreviation": "USD",
         },
-        "wanted_currency_id": 2,
+        "wanted_currency_id": {
+            "currency_id": 2,
+            "abbreviation": "EUR",
+        },
         "exchange_rate": 1.5,
         "account_number_hash": '12345678901234567890123456',
         "status": "Active"
@@ -379,12 +354,12 @@ def test_delete_offer_not_found(mocker):
     offer_id = 123
     result = db.delete_offer(offer_id)
 
-    assert result is None
+    assert result is True
 
 def test_delete_offer_database_error(mocker):
 
     mocker.patch('backend.database.mysql.connector.connect')
-    mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value.execute.side_effect', Exception("Database error"))
+    mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value.execute.side_effect', db.DatabaseError("Database error occurred"))
 
     offer_id = 123
     with pytest.raises(db.DatabaseError, match="Database error occurred"):

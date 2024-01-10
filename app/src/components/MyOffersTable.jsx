@@ -86,11 +86,17 @@ const OfferRow = ({ offer }) => {
 export const MyOffersTable = ({ type }) => {
   const [parent] = useAutoAnimate();
   const { userId } = clientToken();
+
   const { data, isLoading, error } = useQuery("userOffers", () =>
-    fetch("http://localhost:8000/user-offers", {
+    fetch(`http://localhost:8000/get_offer_details/${userId}`, {
       headers: { Authorization: `Bearer: ${userId()}` },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
       .then((resJson) => userOffersResponseSchema.parse(resJson))
   );
 

@@ -11,10 +11,10 @@ import z from "zod";
 import { DialogMatches } from "./DialogMatches";
 
 export const newOfferSchema = z.object({
-  value: z.coerce.number().positive(),
-  currency: z.coerce.number().positive(), // Expecting currency ID as a number
-  wanted_currency: z.coerce.number().positive(), // Expecting wanted currency ID as a number
-  exchange_rate: z.coerce.number().positive(),
+  value: z.number().positive(),
+  currency: z.number().positive(), // Expecting currency ID as a number
+  wanted_currency: z.number().positive(), // Expecting wanted currency ID as a number
+  exchange_rate: z.number().positive(),
 });
 
 const defaultValues = {
@@ -131,7 +131,7 @@ export const CreateOfferForm = () => {
         {/* selecty walut */}
         <div>
           <Label htmlFor="currency">Jaką walutę chcesz sprzedać?</Label>
-          <Controller
+          {/* <Controller
             control={control}
             name="currency"
             render={({ field }) => (
@@ -146,6 +146,19 @@ export const CreateOfferForm = () => {
                 value={field.value}
               />
             )}
+          /> */}
+          <Controller
+            control={control}
+            name="currency"
+            render={({ field }) => (
+              <SelectCurrency
+                invalid={!!formState.errors.currency?.currency_id}
+                id="currency"
+                onChange={(event) => field.onChange(Number(event.target.value))}
+                name={field.name}
+                value={field.value}
+              />
+            )}
           />
           <FormFeedback invalid="true">
             {formState.errors.currency?.currency_id?.message}
@@ -153,7 +166,7 @@ export const CreateOfferForm = () => {
         </div>
         <div>
           <Label htmlFor="wanted_currency">Jaką walutę chcesz kupić?</Label>
-          <Controller
+          {/* <Controller
             control={control}
             name="wanted_currency"
             render={({ field }) => (
@@ -164,6 +177,19 @@ export const CreateOfferForm = () => {
                   // Directly pass the number value
                   field.onChange(Number(event.target.value));
                 }}
+                name={field.name}
+                value={field.value}
+              />
+            )}
+          /> */}
+          <Controller
+            control={control}
+            name="wanted_currency"
+            render={({ field }) => (
+              <SelectCurrency
+                invalid={!!formState.errors.wanted_currency?.currency_id}
+                id="wanted_currency"
+                onChange={(event) => field.onChange(Number(event.target.value))}
                 name={field.name}
                 value={field.value}
               />

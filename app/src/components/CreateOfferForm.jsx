@@ -49,6 +49,7 @@ export const CreateOfferForm = () => {
     {
       onSuccess: (data) => {
         // Handle success state
+        console.log(data.matches);
         setDialogData(data.matches);
         setIsModalOpen(true);
       },

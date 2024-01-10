@@ -260,7 +260,7 @@ def add_internal_transaction(user_id, currency_id, value):
             cursor.close()
         if 'conn' in locals() and conn.is_connected():
             conn.close()
-            
+
 def user_offers(seller_id):
     conn = mysql.connector.connect(**db_config)
     try:
@@ -360,7 +360,6 @@ def get_transactions(id):
         result.extend(cursor.fetchall())
         end_data = []
         for data in result:
-            print(data)
             end_data.append(
                 {
                     "transaction_id": data[0],

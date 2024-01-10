@@ -18,6 +18,7 @@ import { Toaster } from "react-hot-toast";
 import { CreateOffer } from "./views/CreateOffer";
 // import { CreateOfferForm } from "./components/CreateOfferForm";
 import { AllOffers } from "./views/AllOffers";
+import UserProfile from "./views/UserProfile";
 
 function App() {
   const { userId } = clientToken();
@@ -42,6 +43,7 @@ function App() {
               <Route exact path="/dodaj" element={<CreateOffer />} />
               {/* <Route exact path="/dodaj" element={<CreateOfferForm />} /> */}
               <Route exact path="/oferty" element={<AllOffers />} />
+              <Route exact path="/profil" element={<UserProfile />}></Route>
             </Routes>
           </Col>
         </Row>

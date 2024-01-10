@@ -79,6 +79,29 @@ async def get_all_currency():
     return {"currency": currency}
 
 
+@app.post("/user_data")
+async def user_data(data: dict):
+    id = data["id"]
+
+    name, surname, email = database.get_user_data(id)
+
+    if name or surname or email:
+        return {"name": name, "surname": surname, "email": email}
+
+    raise HTTPException(status_code=400, detail="Podany użytkownik nie istnieje")
+
+
+@app.post("/add_offer")
+async def email_used(data: dict):
+    user_id = data['user_id']
+    selled_currency_id = data['selled_currency_id']
+    value = data['value']
+    wanted_currency_id = data['wanted_currency_id']
+    exchange_rate = data['exchange_rate']
+    matches = database.new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate)
+    return {"matches": matches}
+
+
 @app.post("/add_new_wallet")
 async def add_new_wallet(data: dict):
     user_id = data["user_id"]

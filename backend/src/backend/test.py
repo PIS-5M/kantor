@@ -268,3 +268,32 @@ def test_add_wallet_database_error(mocker):
 
     with pytest.raises(Exception, match='Database error'):
         db.add_wallet(user_id, currency_id, account_number_hash)
+
+def test_delete_offer_success(mocker):
+
+    mocker.patch('backend.database.mysql.connector.connect')
+    mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value.rowcount', return_value=1)
+
+    offer_id = 123
+    result = db.delete_offer(offer_id)
+
+    assert result is True
+
+def test_delete_offer_not_found(mocker):
+
+    mocker.patch('backend.database.mysql.connector.connect')
+    mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value.rowcount', return_value=0)
+
+    offer_id = 123
+    result = db.delete_offer(offer_id)
+
+    assert result is False
+
+def test_delete_offer_database_error(mocker):
+
+    mocker.patch('backend.database.mysql.connector.connect')
+    mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value.execute.side_effect', Exception("Database error"))
+
+    offer_id = 123
+    with pytest.raises(db.DatabaseError, match="Database error occurred"):
+        db.delete_offer(offer_id)

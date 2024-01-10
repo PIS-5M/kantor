@@ -16,7 +16,7 @@ export const DialogMatches = ({ isOpen, data, toggle }) => {
               ))}
             </ul>
           ) : (
-            <p>Brak danych do wyświetlenia.</p>
+            <p>Nie znaleziono pasujących ofert 💔</p>
           )}
         </ModalBody>
         <ModalFooter>

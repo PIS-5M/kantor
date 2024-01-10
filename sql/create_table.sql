@@ -82,12 +82,40 @@ CREATE TABLE `kantor`.`internal_transactions` (
 );
 
 USE `kantor`;
-CREATE  OR REPLACE VIEW `completed_offers` AS 
+CREATE  OR REPLACE VIEW `completed_offers` AS
 SELECT * FROM offer_history WHERE remaining_value = 0;
 
 USE `kantor`;
 CREATE  OR REPLACE VIEW `uncompleted_offers` AS
 SELECT * FROM offer_history WHERE remaining_value > 0;
 
+CREATE OR REPLACE VIEW `money_on_offer` AS
+SELECT
+    w.wallet_id,
+    w.user_id,
+    c.name AS currency_name,
+    COALESCE(SUM(CASE WHEN oh.is_cancelled = 0 THEN oh.remaining_value ELSE 0 END), 0) AS value_in_offer
+FROM
+    wallet w
+LEFT JOIN
+    offer_history oh ON w.user_id = oh.seller_id AND w.currency_id = oh.publication_currency_id AND oh.is_cancelled = 0
+LEFT JOIN
+    currency c ON w.currency_id = c.currency_id
+GROUP BY
+    w.wallet_id;
 
+USE `kantor`;
+CREATE  OR REPLACE VIEW `money_in_wallet` AS
+SELECT
+    w.wallet_id,
+    w.user_id,
+    COALESCE(SUM(t.value), 0) + COALESCE(SUM(it.value), 0) AS value_in_wallet
+FROM
+    wallet w
+LEFT JOIN
+    `transaction` t ON w.wallet_id = t.wallet_id
+LEFT JOIN
+    internal_transactions it ON w.wallet_id = it.wallet_id
+GROUP BY
+    w.wallet_id, w.user_id;
 

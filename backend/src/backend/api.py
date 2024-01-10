@@ -77,3 +77,10 @@ async def email_used(data: dict):
 async def get_all_currency():
     currency = database.get_all_currency()
     return {"currency": currency}
+
+
+@app.post("/show_wallet")
+async def show_wallet(data: dict):
+    user_id = data["user_id"]
+    wallet = database.get_wallet(user_id)
+    return {"wallet": wallet}

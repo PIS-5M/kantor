@@ -4,9 +4,9 @@ import math
 
 # Ustawienia polaczenia
 db_config = {
-    "host": "localhost",
+    "host": "172.19.0.2",
     "user": "root",
-    "password": "Mikato@12",
+    "password": "root",
     "database": "kantor",
 } # change password for correct
 

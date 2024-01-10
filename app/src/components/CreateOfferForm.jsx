@@ -11,10 +11,10 @@ import z from "zod";
 import { DialogMatches } from "./DialogMatches";
 
 export const newOfferSchema = z.object({
-  value: z.number().positive(),
-  currency: z.number().positive(), // Expecting currency ID as a number
-  wanted_currency: z.number().positive(), // Expecting wanted currency ID as a number
-  exchange_rate: z.number().positive(),
+  value: z.coerce.number().positive(),
+  currency: z.coerce.number().positive(), // Expecting currency ID as a number
+  wanted_currency: z.coerce.number().positive(), // Expecting wanted currency ID as a number
+  exchange_rate: z.coerce.number().positive(),
 });
 
 const defaultValues = {

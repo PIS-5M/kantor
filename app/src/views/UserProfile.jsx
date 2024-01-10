@@ -7,7 +7,10 @@ function UserProfile () {
     return (
         <div className="BLUE_BG">
           <UserData />
+          <div className='mb-12'></div>
+          <div className='whiteTextStyle'>Twoje portfele</div>
           <AddNewWallet />
+          <div className='mb-12'></div>
           <Wallets />
         </div>
       );

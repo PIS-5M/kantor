@@ -110,6 +110,4 @@ LEFT JOIN
 LEFT JOIN
     internal_transactions it ON w.wallet_id = it.wallet_id
 GROUP BY
-    w.wallet_id, w.user_id; 
-
-
+    w.wallet_id, w.user_id;

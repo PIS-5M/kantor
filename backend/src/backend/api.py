@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import bcrypt
 import database
+from database import DatabaseError
 
 
 app = FastAPI()
@@ -73,7 +74,7 @@ async def email_used(data: dict):
     return {"message": False}
 
 
-@app.post("/all_currency")
+@app.get("/all_currency")
 async def get_all_currency():
     currency = database.get_all_currency()
     return {"currency": currency}
@@ -90,6 +91,7 @@ async def user_data(data: dict):
 
     raise HTTPException(status_code=400, detail="Podany użytkownik nie istnieje")
 
+
 @app.post("/add_offer")
 async def email_used(data: dict):
     user_id = data['user_id']
@@ -99,3 +101,80 @@ async def email_used(data: dict):
     exchange_rate = data['exchange_rate']
     matches = database.new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate)
     return {"matches": matches}
+
+
+@app.post("/add_new_wallet")
+async def add_new_wallet(data: dict):
+    user_id = data["user_id"]
+    currency_id = data["currency_id"]
+    account = data["account"]
+
+    hashed_account = bcrypt.hashpw(account.encode("utf-8"), bcrypt.gensalt())
+    hashed_account_string = hashed_account.decode("utf-8")
+
+    result = database.add_wallet(user_id, currency_id, hashed_account_string)
+    if result:
+        return {"message": "Succesfully added wallet"}
+    raise HTTPException(status_code=400, detail="Użytkownik już ma taki portfel")
+
+@app.get("/user_offers/{seller_id}", response_model=dict)
+async def user_offers(seller_id: int):
+    result = database.user_offers(seller_id)
+
+    if result is None:
+        raise HTTPException(status_code=404, detail="Offer not found for the given seller ID")
+
+    offer_details = {
+        "offer_id": result["offer_history_id"],
+        "publication_date": result["publication_date"],
+        "last_modification_date": result["last_modification_date"],
+        "value": result["value"],
+        "currency": {
+            "currency_id": result["currency_id"],
+            "abbreviation": result["abbreviation"],
+        },
+        "wanted_currency": result["wanted_currency_id"],
+        "exchange_rate": result["exchange_rate"],
+        "account_number": result["account_number_hash"],
+        "status": "Cancelled" if result["is_cancelled"] else "Active",
+    }
+
+    return offer_details
+
+
+@app.post("/show_wallet")
+async def show_wallet(data: dict):
+    user_id = data["user_id"]
+    wallet = database.get_wallet(user_id)
+    return {"wallet": wallet}
+
+
+@app.delete("/delete_offer/{offer_id}")
+async def delete_offer(offer_id: int):
+    try:
+        offer_deleted = database.delete_offer(offer_id)
+
+        if not offer_deleted:
+            raise HTTPException(status_code=404, detail="Offer not found")
+
+        return {"message": "Offer deleted successfully"}
+    except DatabaseError:
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
+
+@app.get("/user-transactions")
+async def get_user_transactions(user_id: int):
+
+    transactions = database.get_transactions(user_id)
+
+    # # POBRANIE Z BAZY DANYCH
+    # transactions = [
+    #     {
+    #         "transaction_id": 1,
+    #         "value": -100.00,
+    #         "value_currency_name": "USD",
+    #         "bank_account": "123456789",
+    #     },
+    # ]
+
+    return {"transactions": transactions}

@@ -17,6 +17,7 @@ import { MyOffers } from "./views/MyOffers";
 import { Toaster } from "react-hot-toast";
 // import { CreateOfferForm } from "./components/CreateOfferForm";
 import { AllOffers } from "./views/AllOffers";
+import WalletMoneyDeposit from "./components/WalletMoneyDeposit";
 
 function App() {
   const { userId } = clientToken();
@@ -40,6 +41,7 @@ function App() {
               <Route exact path="/moje_oferty" element={<MyOffers />} />
               {/* <Route exact path="/dodaj" element={<CreateOfferForm />} /> */}
               <Route exact path="/oferty" element={<AllOffers />} />
+              <Route exact path="/profil" element={<WalletMoneyDeposit />} />
             </Routes>
           </Col>
         </Row>

@@ -9,7 +9,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 export const currencySchema = z.object({
   currency_id: z.coerce.number().positive("Nieprawidłowa waluta"),
-  abbreviation: z.string(),
+  abbreviation: z.coerce.string(),
 });
 
 export const offerSchema = z.object({

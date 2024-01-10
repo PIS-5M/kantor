@@ -18,3 +18,22 @@ export default function clientToken() {
 
   return { login, logout, userId };
 }
+
+// export default function clientToken() {
+//   // Mock login function
+//   const login = (id) => {
+//     console.log(`Mock login with id: ${id}`);
+//   };
+
+//   // Mock logout function
+//   const logout = () => {
+//     console.log("Mock logout");
+//   };
+
+//   // Mock userId function to always return 1
+//   const userId = () => {
+//     return 1;
+//   };
+
+//   return { login, logout, userId };
+// }

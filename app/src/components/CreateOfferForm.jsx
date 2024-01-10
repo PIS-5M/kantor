@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, FormFeedback, Input, Label } from "reactstrap";
-import { currencySchema } from "./MyOffersTable";
 import { SelectCurrency } from "./SelectCurrency";
 import { useMutation, useQueryClient } from "react-query";
 import toast from "react-hot-toast";
@@ -10,24 +9,17 @@ import clientToken from "../ClientToken";
 import z from "zod";
 import { DialogMatches } from "./DialogMatches";
 
-export const newOfferSchema = {
-  // submit danych w takiej formie bedzie
+export const newOfferSchema = z.object({
   value: z.coerce.number().positive(),
-  currency: currencySchema, // currency obj -> {id + abbr}
-  wanted_currency: currencySchema,
+  currency: z.coerce.number().positive(), // Expecting currency ID as a number
+  wanted_currency: z.coerce.number().positive(), // Expecting wanted currency ID as a number
   exchange_rate: z.coerce.number().positive(),
-};
+});
 
 const defaultValues = {
   value: 0,
-  currency: {
-    currency_id: -1,
-    abbreviation: "",
-  },
-  wanted_currency: {
-    currency_id: -2,
-    abbreviation: "",
-  },
+  currency_id: -1,
+  wanted_currency_id: -2,
   exchange_rate: 0,
 };
 
@@ -37,64 +29,48 @@ export const CreateOfferForm = () => {
     defaultValues,
   });
 
-  const [dialogData, setDialogData] = React.useState(null); // display matching offers that were found
+  //
+  // helpers for showing matched offers in a modal
+  const [dialogData, setDialogData] = React.useState(null);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  //
 
-  const qc = useQueryClient();
-  const { mutateAsync, isLoading } = useMutation(
-    async (dataToSend) => {
+  // Use React Query's useMutation for handling API requests
+  const { mutate, isLoading } = useMutation(
+    (newOfferData) => {
       return fetch("http://localhost:8000/add_offer", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSend),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newOfferData),
       }).then((res) => res.json());
     },
+
     {
-      onSuccess: () => {
-        qc.invalidateQueries("userOffers");
-        // toast.success("Pomyślnie utworzono ofertę!");
+      onSuccess: (data) => {
+        // Handle success state
+        setDialogData(data.matches);
+        setIsModalOpen(true);
       },
-      onError: () => {
-        toast.error("Nie udało się dodać oferty.");
+
+      onError: (error) => {
+        // Handle error state
+        console.error("Error submitting offer:", error);
+        toast.error("Error submitting offer");
       },
     }
   );
 
-  const submitHandler = async (values) => {
-    const user_id = clientToken().userId();
+  const submitHandler = async (data) => {
+    const offerData = {
+      user_id: clientToken().userId(),
+      selled_currency_id: data.currency,
+      value: data.value,
+      wanted_currency_id: data.wanted_currency,
+      exchange_rate: data.exchange_rate,
+    };
 
-    if (!user_id) {
-      toast.error("User ID is not available");
-      return;
-    }
-
-    try {
-      const selledCurrency = currencySchema.parse(JSON.parse(values.currency));
-      const wantedCurrency = currencySchema.parse(
-        JSON.parse(values.wanted_currency)
-      );
-
-      const dataToSend = {
-        user_id,
-        selled_currency_id: selledCurrency.currency_id,
-        value: values.value,
-        wanted_currency_id: wantedCurrency.currency_id,
-        exchange_rate: values.exchange_rate,
-      };
-
-      const response = await mutateAsync(dataToSend);
-
-      if (response.matches) {
-        console.log("Matches:", response.matches);
-        toast.success("Oferta została dodana!");
-        //JSON.stringify(response.matches)
-        setDialogData(response.matches); // ustawiona flaga ze sa matche
-      }
-    } catch (e) {
-      console.error(e);
-      // toast.error("Nie udało się dodać oferty");
-    }
+    mutate(offerData);
   };
 
   return (
@@ -107,12 +83,11 @@ export const CreateOfferForm = () => {
             name="value"
             render={({ field }) => (
               <Input
-                // {...field} // mozna
                 placeholder="np. 4500"
                 invalid={!!formState.errors.value}
                 id="value"
                 inputMode="numeric"
-                onChange={field.onChange}
+                onChange={(event) => field.onChange(Number(event.target.value))}
                 onBlur={field.onBlur}
                 name={field.name}
                 value={field.value}
@@ -123,6 +98,7 @@ export const CreateOfferForm = () => {
             {formState.errors.value?.message}
           </FormFeedback>
         </div>
+
         {/* selecty walut */}
         <div>
           <Label htmlFor="currency">Jaką walutę chcesz sprzedać?</Label>
@@ -134,10 +110,11 @@ export const CreateOfferForm = () => {
                 invalid={!!formState.errors.currency?.currency_id}
                 id="currency"
                 onChange={(event) => {
-                  field.onChange(JSON.parse(event.target.value));
+                  // Directly pass the number value
+                  field.onChange(Number(event.target.value));
                 }}
                 name={field.name}
-                value={JSON.stringify(field.value)}
+                value={field.value}
               />
             )}
           />
@@ -145,6 +122,7 @@ export const CreateOfferForm = () => {
             {formState.errors.currency?.currency_id?.message}
           </FormFeedback>
         </div>
+
         <div>
           <Label htmlFor="wanted_currency">Jaką walutę chcesz kupić?</Label>
           <Controller
@@ -155,10 +133,11 @@ export const CreateOfferForm = () => {
                 invalid={!!formState.errors.wanted_currency?.currency_id}
                 id="wanted_currency"
                 onChange={(event) => {
-                  field.onChange(JSON.parse(event.target.value));
+                  // Directly pass the number value
+                  field.onChange(Number(event.target.value));
                 }}
                 name={field.name}
-                value={JSON.stringify(field.value)}
+                value={field.value}
               />
             )}
           />
@@ -177,7 +156,7 @@ export const CreateOfferForm = () => {
                 placeholder="np. 2.50"
                 invalid={!!formState.errors.exchange_rate}
                 id="exchange_rate"
-                onChange={field.onChange}
+                onChange={(event) => field.onChange(Number(event.target.value))}
                 onBlur={field.onBlur}
                 name={field.name}
                 value={field.value}
@@ -198,12 +177,11 @@ export const CreateOfferForm = () => {
         </Button>
       </Form>
 
-      {dialogData && (
-        <DialogMatches
-          data={dialogData}
-          onClose={() => setDialogData(null)} // Method to close the dialog
-        />
-      )}
+      <DialogMatches
+        isOpen={isModalOpen}
+        data={dialogData}
+        toggle={toggleModal}
+      />
     </div>
   );
 };

@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, FormFeedback, Input, Label } from "reactstrap";
-// import { currencySchema } from "./MyOffersTable";
 import { SelectCurrency } from "./SelectCurrency";
 import { useMutation, useQueryClient } from "react-query";
 import toast from "react-hot-toast";
@@ -36,63 +35,39 @@ export const CreateOfferForm = () => {
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   //
 
-  const qc = useQueryClient();
-  const { mutateAsync, isLoading } = useMutation(
-    async (dataToSend) => {
-      return fetch("http://localhost:8000/add_offer", {
+  // Use React Query's useMutation for handling API requests
+  const { mutate, isLoading } = useMutation(
+    (newOfferData) => {
+      return fetch("/add_offer", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSend),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newOfferData),
       }).then((res) => res.json());
     },
     {
-      onSuccess: () => {
-        qc.invalidateQueries("userOffers");
-        // toast.success("Pomyślnie utworzono ofertę!");
+      onSuccess: (data) => {
+        // Handle success state
+        setDialogData(data.matches);
+        setIsModalOpen(true);
       },
-      onError: () => {
-        toast.error("Nie udało się dodać oferty.");
+      onError: (error) => {
+        // Handle error state
+        console.error("Error submitting offer:", error);
+        toast.error("Error submitting offer");
       },
     }
   );
 
-  const submitHandler = async (values) => {
-    const user_id = clientToken().userId();
+  const submitHandler = async (data) => {
+    const offerData = {
+      user_id: clientToken.userId(),
+      selled_currency_id: data.currency,
+      value: data.value,
+      wanted_currency_id: data.wanted_currency,
+      exchange_rate: data.exchange_rate,
+    };
 
-    if (!user_id) {
-      toast.error("User ID is not available");
-      return;
-    }
-
-    try {
-      // const selledCurrency = currencySchema.parse(JSON.parse(values.currency));
-      // const wantedCurrency = currencySchema.parse(
-      //   JSON.parse(values.wanted_currency)
-      // );
-
-      const dataToSend = {
-        user_id,
-        selled_currency_id: values.currency_id, //selledCurrency.currency_id,
-        value: values.value,
-        wanted_currency_id: values.wanted_currency_id, //wantedCurrency.currency_id,
-        exchange_rate: values.exchange_rate,
-      };
-
-      const response = await mutateAsync(dataToSend);
-
-      if (response.matches) {
-        console.log("Matches:", response.matches);
-        toast.success("Oferta została dodana!");
-        //JSON.stringify(response.matches)
-        setDialogData(response.matches);
-        setIsModalOpen(true); // Open the modal
-      }
-    } catch (e) {
-      console.error(e);
-      // toast.error("Nie udało się dodać oferty");
-    }
+    mutate(offerData);
   };
 
   return (

@@ -277,3 +277,27 @@ def get_wallet(user_id):
             cursor.close()
         if "conn" in locals() and conn.is_connected():
             conn.close()
+
+
+class DatabaseError(Exception):
+    def __init__(self, message: str):
+        self.message = message
+
+def delete_offer(offer_id):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        cursor = conn.cursor()
+        query = "DELETE FROM offer_history WHERE offer_history_id = %s"
+        cursor.execute(query, (offer_id,))
+        conn.commit()
+        if cursor.rowcount == 0:
+            return False  # Offer not found
+        return True  # Offer found and deleted
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        raise DatabaseError(message="Database error occurred")
+    finally:
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()

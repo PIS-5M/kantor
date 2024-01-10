@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import bcrypt
 import database
+from database import DatabaseError
 
 
 app = FastAPI()
@@ -122,3 +123,17 @@ async def show_wallet(data: dict):
     user_id = data["user_id"]
     wallet = database.get_wallet(user_id)
     return {"wallet": wallet}
+
+
+@app.delete("/delete_offer/{offer_id}")
+async def delete_offer(offer_id: int):
+    try:
+        offer_deleted = database.delete_offer(offer_id)
+
+        if not offer_deleted:
+            raise HTTPException(status_code=404, detail="Offer not found")
+
+        return {"message": "Offer deleted successfully"}
+    except DatabaseError:
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+

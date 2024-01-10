@@ -7,7 +7,7 @@ export const DialogMatches = ({ isOpen, data, toggle }) => {
       <Modal isOpen={isOpen} toggle={toggle}>
         <ModalHeader toggle={toggle}>Zmatchowane Oferty</ModalHeader>
         <ModalBody>
-          {data ? (
+          {data && data.length > 0 ? (
             <ul>
               {data.map((match, index) => (
                 <li key={index}>

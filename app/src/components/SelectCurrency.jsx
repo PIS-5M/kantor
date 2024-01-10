@@ -6,6 +6,8 @@ export const SelectCurrency = (props) => {
   const [options, setOptions] = React.useState([]);
   // const [isLoading, setIsLoading] = React.useState(false);
 
+  // {"currency":[[1,"Dolar AmerykaÅ„ski","USD","12345678901234567890123456"],[2,"Euro","EUR","98765432109876543210987654"], ... ]
+
   React.useEffect(() => {
     const run = async () => {
       // setIsLoading(true);

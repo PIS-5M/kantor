@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, FormFeedback, Input, Label } from "reactstrap";
-import { currencySchema } from "./MyOffersTable";
+// import { currencySchema } from "./MyOffersTable";
 import { SelectCurrency } from "./SelectCurrency";
 import { useMutation, useQueryClient } from "react-query";
 import toast from "react-hot-toast";
@@ -17,29 +17,28 @@ export const newOfferSchema = z.object({
   exchange_rate: z.coerce.number().positive(),
 });
 
-const defaultValues = {
-  value: 0,
-  currency: {
-    currency_id: -1,
-    abbreviation: "",
-  },
-  wanted_currency: {
-    currency_id: -2,
-    abbreviation: "",
-  },
-  exchange_rate: 0,
-};
+// const defaultValues = {
+//   value: 0,
+//   currency: {
+//     currency_id: -1,
+//     abbreviation: "",
+//   },
+//   wanted_currency: {
+//     currency_id: -2,
+//     abbreviation: "",
+//   },
+//   exchange_rate: 0,
+// };
 
 export const CreateOfferForm = () => {
   const { handleSubmit, formState, control } = useForm({
     resolver: zodResolver(newOfferSchema),
-    defaultValues,
+    // defaultValues,
   });
 
   // helpers for showing matched offers in a modal
   const [dialogData, setDialogData] = React.useState(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   //
 
@@ -74,16 +73,16 @@ export const CreateOfferForm = () => {
     }
 
     try {
-      const selledCurrency = currencySchema.parse(JSON.parse(values.currency));
-      const wantedCurrency = currencySchema.parse(
-        JSON.parse(values.wanted_currency)
-      );
+      // const selledCurrency = currencySchema.parse(JSON.parse(values.currency));
+      // const wantedCurrency = currencySchema.parse(
+      //   JSON.parse(values.wanted_currency)
+      // );
 
       const dataToSend = {
         user_id,
-        selled_currency_id: selledCurrency.currency_id,
+        selled_currency_id: values.currency_id, //selledCurrency.currency_id,
         value: values.value,
-        wanted_currency_id: wantedCurrency.currency_id,
+        wanted_currency_id: values.wanted_currency_id, //wantedCurrency.currency_id,
         exchange_rate: values.exchange_rate,
       };
 

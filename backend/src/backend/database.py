@@ -4,7 +4,7 @@ import math
 
 # Ustawienia polaczenia
 db_config = {
-    "host": "172.19.0.2",
+    "host": "localhost",
     "user": "root",
     "password": "root",
     "database": "kantor",
@@ -129,6 +129,36 @@ def get_user_data(id):
         if "conn" in locals() and conn.is_connected():
             conn.close()
 
+
+def add_wallet(user_id, currency_id, account_number_hash):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        # Utworz obiekt kursora
+        cursor = conn.cursor()
+        # Wywolaj funkcje
+        # Sprawdz czy juz ma taki portfel
+        args = (user_id, currency_id)
+        cursor.execute(f"SELECT * from wallet where user_id=%s and currency_id=%s", args)
+
+        # Pobierz wyniki
+        result = cursor.fetchone()
+        if not result:
+            args = (user_id, currency_id, account_number_hash)
+            cursor.execute(f"INSERT INTO `kantor`.`wallet` (`user_id`, `currency_id`, `account_number_hash`) VALUES (%s, %s, %s)", args)
+            cursor.execute("COMMIT;")
+            return True
+        else:
+            # juz ma
+            return False
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+    finally:
+        # Zamknij kursor i polaczenie
+        if "cursor" in locals() and cursor is not None:
+            cursor.close()
+        if "conn" in locals() and conn.is_connected():
+            conn.close()
+
 def new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate):
     trans_value = -value
     add_internal_transaction(user_id, selled_currency_id, trans_value)
@@ -226,6 +256,123 @@ def add_internal_transaction(user_id, currency_id, value):
         print(f"Blad: {err}")
     finally:
         # Zamknij kursor i polaczenie
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
+            
+def user_offers(seller_id):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        cursor = conn.cursor(dictionary=True)
+        query = (
+            "SELECT "
+            "   oh.offer_history_id, "
+            "   oh.publication_date, "
+            "   oh.last_modification_date, "
+            "   oh.value, "
+            "   c.currency_id, "
+            "   c.abbreviation, "
+            "   oh.wanted_currency_id, "
+            "   oh.exchange_rate, "
+            "   w.account_number_hash, "
+            "   oh.is_cancelled "
+            "FROM offer_history oh "
+            "JOIN user u ON oh.seller_id = u.user_id "
+            "JOIN currency c ON oh.publication_currency_id = c.currency_id "
+            "JOIN wallet wa ON oh.seller_id = wa.user_id "
+            "WHERE oh.seller_id = %s"
+        )
+        cursor.execute(query, (seller_id,))
+        result = cursor.fetchone()
+
+        return result
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return None
+    finally:
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
+
+
+def get_wallet(user_id):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        # Utwórz obiekt kursora
+        cursor = conn.cursor()
+        # Wywołaj funkcję
+        args = (user_id,)
+        cursor.execute(f"select f.currency_name, w.wallet_id, w.user_id, value_in_wallet, value_in_offer from money_in_wallet w join money_on_offer f on w.wallet_id = f.wallet_id where w.user_id = %s", args)
+
+        # Pobierz wyniki
+        wallet = cursor.fetchall()
+        print(wallet)
+        return wallet
+    except mysql.connector.Error as err:
+        print(f"Błąd: {err}")
+    finally:
+        # Zamknij kursor i połączenie
+        if "cursor" in locals() and cursor is not None:
+            cursor.close()
+        if "conn" in locals() and conn.is_connected():
+            conn.close()
+
+
+class DatabaseError(Exception):
+    def __init__(self, message: str):
+        self.message = message
+
+def delete_offer(offer_id):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        cursor = conn.cursor()
+        query = "DELETE FROM offer_history WHERE offer_history_id = %s"
+        cursor.execute(query, (offer_id,))
+        conn.commit()
+        if cursor.rowcount == 0:
+            return False  # Offer not found
+        return True  # Offer found and deleted
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        raise DatabaseError(message="Database error occurred")
+    finally:
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
+
+
+
+def get_transactions(id):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        cursor = conn.cursor()
+        args = (id,)
+        cursor.execute(f"select transaction_id, value, name, account_number_hash from transaction t join wallet w on t.wallet_id = w.wallet_id join currency c on w.currency_id = c.currency_id where w.user_id = %s", args)
+
+        result = cursor.fetchall()
+
+        args = (id,)
+        cursor.execute(f"select internal_transactions_id, value, name, account_number_hash from internal_transactions t join wallet w on t.wallet_id = w.wallet_id join currency c on w.currency_id = c.currency_id where w.user_id = %s", args)
+
+        result.extend(cursor.fetchall())
+        end_data = []
+        for data in result:
+            print(data)
+            end_data.append(
+                {
+                    "transaction_id": data[0],
+                    "value": data[1],
+                    "value_currency_name": data[2],
+                    "bank_account": "1234567891234567"
+                }
+            )
+        return end_data
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+    finally:
         if 'cursor' in locals() and cursor is not None:
             cursor.close()
         if 'conn' in locals() and conn.is_connected():

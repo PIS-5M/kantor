@@ -5,6 +5,9 @@ from unittest.mock import patch, Mock
 import mysql.connector
 import datetime
 import math
+from backend.database import login
+import backend.database as db
+
 def test_login_successful(mocker):
     # Mock the cursor and execute method
     mocker.patch('backend.database.mysql.connector.connect')
@@ -66,6 +69,7 @@ def test_login_database_error(mocker):
 
     with pytest.raises(Exception, match='Database error'):
         db.login('test@example.com', 'password123')
+
 
 
 # add offer
@@ -222,3 +226,155 @@ def test_new_offer_without_match(mocker):
     mocker.patch('backend.database.offer_match', return_value=[])
     result = db.new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate)
     assert result == []
+
+
+def test_add_wallet_success(mocker):
+    # Mock the cursor and execute method
+    mocker.patch('backend.database.mysql.connector.connect')
+    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
+    mock_cursor.fetchone.return_value = None
+
+    user_id = 1
+    currency_id = 2
+    account_number_hash = "hashed_account_number"
+
+    result = db.add_wallet(user_id, currency_id, account_number_hash)
+
+    assert result is True
+
+
+def test_add_wallet_already_exist(mocker):
+    # Mock the cursor and execute method
+    mocker.patch('backend.database.mysql.connector.connect')
+    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
+    mock_cursor.fetchone.return_value = ['wallet']
+
+    user_id = 1
+    currency_id = 2
+    account_number_hash = "hashed_account_number"
+
+    result = db.add_wallet(user_id, currency_id, account_number_hash)
+
+    assert result is False
+
+
+def test_add_wallet_database_error(mocker):
+    # Mock the cursor and execute method to raise an exception
+    mocker.patch('backend.database.mysql.connector.connect')
+    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
+    mock_cursor.execute.side_effect = Exception('Database error')
+
+    user_id = 1
+    currency_id = 2
+    account_number_hash = "hashed_account_number"
+
+    with pytest.raises(Exception, match='Database error'):
+        db.add_wallet(user_id, currency_id, account_number_hash)
+
+def test_delete_offer_success(mocker):
+
+    mocker.patch('backend.database.mysql.connector.connect')
+    mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value.rowcount', return_value=1)
+
+    offer_id = 123
+    result = db.delete_offer(offer_id)
+
+    assert result is True
+
+@pytest.fixture
+def mock_cursor(mocker):
+    return mocker.patch('backend.database.mysql.connector.connect.return_value.cursor')
+
+def test_user_offers_success(mock_cursor):
+
+    mock_fetchone = mock_cursor.return_value.fetchone
+    mock_fetchone.return_value = {
+        "offer_history_id": 1,
+        "publication_date": "2022-01-09T12:00:00",
+        "last_modification_date": "2022-01-10T08:30:00",
+        "value": 100.0,
+        "currency_id": 1,
+        "abbreviation": "USD",
+        "wanted_currency_id": 2,
+        "exchange_rate": 1.5,
+        "account_number_hash": '12345678901234567890123456',
+        "is_cancelled": False
+    }
+
+    result = db.user_offers(1)
+
+    assert result == {
+        "offer_history_id": 1,
+        "publication_date": "2022-01-09T12:00:00",
+        "last_modification_date": "2022-01-10T08:30:00",
+        "value": 100.0,
+        "currency": {
+            "currency_id": 1,
+            "abbreviation": "USD",
+        },
+        "wanted_currency_id": 2,
+        "exchange_rate": 1.5,
+        "account_number_hash": '12345678901234567890123456',
+        "status": "Active"
+    }
+
+def test_user_offers_not_found(mock_cursor):
+
+    mock_fetchone = mock_cursor.return_value.fetchone
+    mock_fetchone.return_value = None
+
+    result = db.user_offers(1)
+
+    assert result is None
+
+def test_user_offers_database_error(mock_cursor):
+
+    mock_execute = mock_cursor.return_value.execute
+    mock_execute.side_effect = Exception("Database error")
+
+    result = db.user_offers(1)
+
+    assert result is None
+
+def test_delete_offer_not_found(mocker):
+
+    mocker.patch('backend.database.mysql.connector.connect')
+    mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value.rowcount', return_value=0)
+
+    offer_id = 123
+    result = db.delete_offer(offer_id)
+
+    assert result is False
+
+def test_delete_offer_database_error(mocker):
+
+    mocker.patch('backend.database.mysql.connector.connect')
+    mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value.execute.side_effect', Exception("Database error"))
+
+    offer_id = 123
+    with pytest.raises(db.DatabaseError, match="Database error occurred"):
+        db.delete_offer(offer_id)
+
+def test_get_wallet(mocker):
+    # Mock the cursor and execute method
+    fake_results = [('USD', 1, 123, 500.0, 1000.0)]
+    mocker.patch('backend.database.mysql.connector.connect')
+    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
+    mock_cursor.fetchall.return_value = fake_results
+    # Przygotowanie danych testowych
+    user_id = 1
+
+    # Wywołanie funkcji
+    result = db.get_wallet(user_id)
+
+    assert result == fake_results
+
+
+def test_get_wallet_error(mocker):
+    # Mock the cursor and execute method to raise an exception
+    mocker.patch('backend.database.mysql.connector.connect')
+    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
+    mock_cursor.execute.side_effect = Exception('Database error')
+
+    with pytest.raises(Exception, match='Database error'):
+        db.get_wallet(1)

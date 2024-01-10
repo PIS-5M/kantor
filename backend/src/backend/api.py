@@ -118,7 +118,7 @@ async def add_new_wallet(data: dict):
     raise HTTPException(status_code=400, detail="Użytkownik już ma taki portfel")
 
 @app.delete("/delete_offer/{offer_id}")
-async def delete_offer_endpoint(offer_id: int):
+async def delete_offer(offer_id: int):
     try:
         offer_deleted = database.delete_offer(offer_id)
 

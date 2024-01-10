@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import bcrypt
 import database
 from database import DatabaseError
-
+from typing import List
 
 app = FastAPI()
 
@@ -129,31 +129,38 @@ async def add_new_wallet(data: dict):
     raise HTTPException(status_code=400, detail="Użytkownik już ma taki portfel")
 
 
-@app.get("/user_offers/{seller_id}", response_model=list)
+@app.get("/user_offers/{seller_id}", response_model=List[Dict[str, Any]])
 async def user_offers(seller_id: int):
-    result = database.user_offers(seller_id)
+    results = database.user_offers(seller_id)
 
-    if result is None:
+    if not results:
         raise HTTPException(
-            status_code=404, detail="Offer not found for the given seller ID"
+            status_code=404, detail="Offers not found for the given seller ID"
         )
 
-    offer_details = {
-        "offer_id": result["offer_history_id"],
-        "publication_date": result["publication_date"],
-        "last_modification_date": result["last_modification_date"],
-        "value": result["value"],
-        "currency": {
-            "currency_id": result["currency_id"],
-            "abbreviation": result["abbreviation"],
-        },
-        "wanted_currency": result["wanted_currency_id"],
-        "exchange_rate": result["exchange_rate"],
-        "account_number": result["account_number_hash"],
-        "status": "Cancelled" if result["is_cancelled"] else "Active",
-    }
+    # List to store offer details
+    offer_details_list = []
 
-    return offer_details
+    for result in results:
+        offer_details = {
+            "offer_id": result["offer_history_id"],
+            "publication_date": result["publication_date"],
+            "last_modification_date": result["last_modification_date"],
+            "value": result["value"],
+            "currency": {
+                "currency_id": result["currency_id"],
+                "abbreviation": result["abbreviation"],
+            },
+            "wanted_currency": result["wanted_currency_id"],
+            "exchange_rate": result["exchange_rate"],
+            "account_number": result["account_number_hash"],
+            "status": "Cancelled" if result["is_cancelled"] else "Active",
+        }
+
+        # Append the offer_details to the list
+        offer_details_list.append(offer_details)
+
+    return offer_details_list
 
 
 @app.post("/show_wallet")

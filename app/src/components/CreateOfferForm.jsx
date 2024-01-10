@@ -112,12 +112,11 @@ export const CreateOfferForm = () => {
             name="value"
             render={({ field }) => (
               <Input
-                // {...field} // mozna
                 placeholder="np. 4500"
                 invalid={!!formState.errors.value}
                 id="value"
                 inputMode="numeric"
-                onChange={field.onChange}
+                onChange={(event) => field.onChange(Number(event.target.value))}
                 onBlur={field.onBlur}
                 name={field.name}
                 value={field.value}
@@ -128,10 +127,11 @@ export const CreateOfferForm = () => {
             {formState.errors.value?.message}
           </FormFeedback>
         </div>
+
         {/* selecty walut */}
         <div>
           <Label htmlFor="currency">Jaką walutę chcesz sprzedać?</Label>
-          {/* <Controller
+          <Controller
             control={control}
             name="currency"
             render={({ field }) => (
@@ -142,19 +142,6 @@ export const CreateOfferForm = () => {
                   // Directly pass the number value
                   field.onChange(Number(event.target.value));
                 }}
-                name={field.name}
-                value={field.value}
-              />
-            )}
-          /> */}
-          <Controller
-            control={control}
-            name="currency"
-            render={({ field }) => (
-              <SelectCurrency
-                invalid={!!formState.errors.currency?.currency_id}
-                id="currency"
-                onChange={(event) => field.onChange(Number(event.target.value))}
                 name={field.name}
                 value={field.value}
               />
@@ -164,9 +151,10 @@ export const CreateOfferForm = () => {
             {formState.errors.currency?.currency_id?.message}
           </FormFeedback>
         </div>
+
         <div>
           <Label htmlFor="wanted_currency">Jaką walutę chcesz kupić?</Label>
-          {/* <Controller
+          <Controller
             control={control}
             name="wanted_currency"
             render={({ field }) => (
@@ -177,19 +165,6 @@ export const CreateOfferForm = () => {
                   // Directly pass the number value
                   field.onChange(Number(event.target.value));
                 }}
-                name={field.name}
-                value={field.value}
-              />
-            )}
-          /> */}
-          <Controller
-            control={control}
-            name="wanted_currency"
-            render={({ field }) => (
-              <SelectCurrency
-                invalid={!!formState.errors.wanted_currency?.currency_id}
-                id="wanted_currency"
-                onChange={(event) => field.onChange(Number(event.target.value))}
                 name={field.name}
                 value={field.value}
               />
@@ -210,7 +185,7 @@ export const CreateOfferForm = () => {
                 placeholder="np. 2.50"
                 invalid={!!formState.errors.exchange_rate}
                 id="exchange_rate"
-                onChange={field.onChange}
+                onChange={(event) => field.onChange(Number(event.target.value))}
                 onBlur={field.onBlur}
                 name={field.name}
                 value={field.value}

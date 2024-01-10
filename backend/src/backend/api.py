@@ -80,7 +80,6 @@ async def get_all_currency():
     return {"currency": currency}
 
 
-
 @app.post("/user_data")
 async def user_data(data: dict):
     id = data["id"]
@@ -95,13 +94,24 @@ async def user_data(data: dict):
 
 @app.post("/add_offer")
 async def email_used(data: dict):
-    user_id = data['user_id']
-    selled_currency_id = data['selled_currency_id']
-    value = data['value']
-    wanted_currency_id = data['wanted_currency_id']
-    exchange_rate = data['exchange_rate']
-    matches = database.new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate)
+    user_id = data["user_id"]
+    selled_currency_id = data["selled_currency_id"]
+    value = data["value"]
+    wanted_currency_id = data["wanted_currency_id"]
+    exchange_rate = data["exchange_rate"]
+    matches = database.new_offer(
+        user_id, selled_currency_id, value, wanted_currency_id, exchange_rate
+    )
     return {"matches": matches}
+
+
+# {
+#   "matches": [
+#     [50, 100],
+#     [30, 60],
+#     ... more matches
+#   ]
+# }
 
 
 @app.post("/add_new_wallet")
@@ -118,12 +128,15 @@ async def add_new_wallet(data: dict):
         return {"message": "Succesfully added wallet"}
     raise HTTPException(status_code=400, detail="Użytkownik już ma taki portfel")
 
+
 @app.get("/user_offers/{seller_id}", response_model=dict)
 async def user_offers(seller_id: int):
     result = database.user_offers(seller_id)
 
     if result is None:
-        raise HTTPException(status_code=404, detail="Offer not found for the given seller ID")
+        raise HTTPException(
+            status_code=404, detail="Offer not found for the given seller ID"
+        )
 
     offer_details = {
         "offer_id": result["offer_history_id"],
@@ -165,7 +178,6 @@ async def delete_offer(offer_id: int):
 
 @app.get("/user-transactions")
 async def get_user_transactions(user_id: int):
-
     transactions = database.get_transactions(user_id)
 
     # # POBRANIE Z BAZY DANYCH
@@ -179,6 +191,7 @@ async def get_user_transactions(user_id: int):
     # ]
 
     return {"transactions": transactions}
+
 
 @app.post("/wallet_add")
 async def add_to_wallet(data: dict):

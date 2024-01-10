@@ -48,10 +48,8 @@ export const CreateOfferForm = () => {
 
     {
       onSuccess: (data) => {
-        // Handle success state
-        console.log(`${data}`);
-        // list[list[int,int]]
-        setDialogData(data);
+        console.log(data);
+        setDialogData(data.matches); // Assuming the API response structure is { matches: [...] }
         setIsModalOpen(true);
       },
 
@@ -89,9 +87,7 @@ export const CreateOfferForm = () => {
                 invalid={!!formState.errors.value}
                 id="value"
                 inputMode="numeric"
-                onChange={(event) =>
-                  field.onChange(parseFloat(event.target.value))
-                }
+                onChange={(event) => field.onChange(event.target.value)}
                 onBlur={field.onBlur}
                 name={field.name}
                 value={field.value}
@@ -113,9 +109,7 @@ export const CreateOfferForm = () => {
               <SelectCurrency
                 invalid={!!formState.errors.currency?.currency_id}
                 id="currency"
-                onChange={(event) =>
-                  field.onChange(parseFloat(event.target.value))
-                }
+                onChange={(event) => field.onChange(event.target.value)}
                 name={field.name}
                 value={field.value}
               />
@@ -137,7 +131,7 @@ export const CreateOfferForm = () => {
                 id="wanted_currency"
                 onChange={(event) => {
                   // Directly pass the number value
-                  field.onChange(Number(event.target.value));
+                  field.onChange(event.target.value);
                 }}
                 name={field.name}
                 value={field.value}
@@ -159,7 +153,7 @@ export const CreateOfferForm = () => {
                 placeholder="np. 2.50"
                 invalid={!!formState.errors.exchange_rate}
                 id="exchange_rate"
-                onChange={(event) => field.onChange(Number(event.target.value))}
+                onChange={(event) => field.onChange(event.target.value)}
                 onBlur={field.onBlur}
                 name={field.name}
                 value={field.value}

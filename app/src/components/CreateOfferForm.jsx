@@ -38,18 +38,20 @@ export const CreateOfferForm = () => {
   // Use React Query's useMutation for handling API requests
   const { mutate, isLoading } = useMutation(
     (newOfferData) => {
-      return fetch("/add_offer", {
+      return fetch("http://localhost:8000/add_offer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newOfferData),
       }).then((res) => res.json());
     },
+
     {
       onSuccess: (data) => {
         // Handle success state
         setDialogData(data.matches);
         setIsModalOpen(true);
       },
+
       onError: (error) => {
         // Handle error state
         console.error("Error submitting offer:", error);

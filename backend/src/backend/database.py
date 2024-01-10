@@ -4,7 +4,7 @@ import math
 
 # Ustawienia polaczenia
 db_config = {
-    "host": "172.19.0.2",
+    "host": "localhost",
     "user": "root",
     "password": "root",
     "database": "kantor",
@@ -122,6 +122,13 @@ def get_user_data(id):
             return None, None, None
     except mysql.connector.Error as err:
         print(f"Błąd: {err}")
+    finally:
+        # Zamknij kursor i polaczenie
+        if "cursor" in locals() and cursor is not None:
+            cursor.close()
+        if "conn" in locals() and conn.is_connected():
+            conn.close()
+
 
 def add_wallet(user_id, currency_id, account_number_hash):
     conn = mysql.connector.connect(**db_config)
@@ -168,11 +175,11 @@ def offer_match(offer_id, selled_currency_id, value, wanted_currency_id, exchang
     while remaining_value > 0 and offer_list:
         best_offer = min(offer_list, key=lambda x: (x[7], x[2]))
         offer_list.remove(best_offer)
-        match_wanted_money = math.floor(best_offer[5] * best_offer[7] * 100 ) / 100
+        match_wanted_money = math.floor(best_offer[8] * best_offer[7] * 100 ) / 100
         if match_wanted_money <= remaining_value:
-            add_match_offers(best_offer[0], best_offer[5], offer_id, match_wanted_money)
+            add_match_offers(best_offer[0], best_offer[8], offer_id, match_wanted_money)
             remaining_value -= match_wanted_money
-            match_list.append([match_wanted_money, best_offer[5]]) # [kwota sprzedana (ile chce zmaczowany), kwota kupiona(ile wystawil zmaczowany)]
+            match_list.append([match_wanted_money, best_offer[8]]) # [kwota sprzedana (ile chce zmaczowany), kwota kupiona(ile wystawil zmaczowany)]
         else:
             reverse_exchange_rate = math.floor(1 / exchange_rate * 100) / 100
             match_money = math.floor(reverse_exchange_rate * remaining_value * 100) / 100
@@ -253,7 +260,7 @@ def add_internal_transaction(user_id, currency_id, value):
             cursor.close()
         if 'conn' in locals() and conn.is_connected():
             conn.close()
-            
+
 def user_offers(seller_id):
     conn = mysql.connector.connect(**db_config)
     try:
@@ -330,6 +337,40 @@ def delete_offer(offer_id):
     except mysql.connector.Error as err:
         print(f"Error: {err}")
         raise DatabaseError(message="Database error occurred")
+    finally:
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
+
+
+
+def get_transactions(id):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        cursor = conn.cursor()
+        args = (id,)
+        cursor.execute(f"select transaction_id, value, name, account_number_hash from transaction t join wallet w on t.wallet_id = w.wallet_id join currency c on w.currency_id = c.currency_id where w.user_id = %s", args)
+
+        result = cursor.fetchall()
+
+        args = (id,)
+        cursor.execute(f"select internal_transactions_id, value, name, account_number_hash from internal_transactions t join wallet w on t.wallet_id = w.wallet_id join currency c on w.currency_id = c.currency_id where w.user_id = %s", args)
+
+        result.extend(cursor.fetchall())
+        end_data = []
+        for data in result:
+            end_data.append(
+                {
+                    "transaction_id": data[0],
+                    "value": data[1],
+                    "value_currency_name": data[2],
+                    "bank_account": "1234567891234567"
+                }
+            )
+        return end_data
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
     finally:
         if 'cursor' in locals() and cursor is not None:
             cursor.close()

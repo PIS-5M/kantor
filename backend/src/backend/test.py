@@ -191,14 +191,14 @@ def test_offer_match(mocker):
 def test_offer_match_2(mocker):
     offer_id = 1
     selled_currency_id = 2
-    value = 50.0
+    value = 20.0
     wanted_currency_id = 3
     exchange_rate = 2.0
     mocker.patch('backend.database.mysql.connector.connect')
     mocker.patch('backend.database.get_possible_match_offer_list', return_value=[(1, datetime.datetime(2024, 1, 9, 16, 11, 27), None, 1, 2, 200.0, 3, 0.5, 100.0, 0)])  # Możesz dostosować wartości zwracane do swojego testu
     mocker.patch('backend.database.add_match_offers', return_value=True)
     result = db.offer_match(offer_id, selled_currency_id, value, wanted_currency_id, exchange_rate)
-    assert result == [[50.0, 25.0]]
+    assert result == [[20.0, 10.0]]
 
 def test_new_offer_with_match(mocker):
     user_id = 1
@@ -378,3 +378,43 @@ def test_get_wallet_error(mocker):
 
     with pytest.raises(Exception, match='Database error'):
         db.get_wallet(1)
+
+
+def test_get_transactions(mocker):
+    # Mock the cursor and execute method
+    transactions = [
+        (1, -100.00, "USD", "1234567891234567")
+    ]
+    mocker.patch('backend.database.mysql.connector.connect')
+    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
+    mock_cursor.fetchall.return_value = transactions
+    # Przygotowanie danych testowych
+    fake_results = [
+        {
+            "transaction_id": 1,
+            "value": -100.00,
+            "value_currency_name": "USD",
+            "bank_account": "1234567891234567",
+        },
+        {
+            "transaction_id": 1,
+            "value": -100.00,
+            "value_currency_name": "USD",
+            "bank_account": "1234567891234567",
+        },
+    ]
+
+    # Wywołanie funkcji
+    result = db.get_transactions(1)
+
+    assert result == fake_results
+
+
+def test_get_transactions_error(mocker):
+    # Mock the cursor and execute method to raise an exception
+    mocker.patch('backend.database.mysql.connector.connect')
+    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
+    mock_cursor.execute.side_effect = Exception('Database error')
+
+    with pytest.raises(Exception, match='Database error'):
+        db.get_transactions(1)

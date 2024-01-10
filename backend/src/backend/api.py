@@ -44,7 +44,7 @@ async def register_user(data: dict):
     print(
         f"Received registration data - user_name: {name}, surname: {surname}, password: {hashed_password_string}, email: {email}"
     )
-    database.registration(hashed_password_string, name, surname, email)
+    database.registration(name, surname, email, hashed_password_string)
     return {"message": "Registration successful"}
 
 

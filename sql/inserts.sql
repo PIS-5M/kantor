@@ -12,7 +12,7 @@ INSERT INTO `currency` (`currency_id`, `name`, `abbreviation`, `account_number`)
 (11, 'Złoty Polski', 'PLN', '11112222333344445555666677');
 
 INSERT INTO `kantor`.`user` (`user_id`, `name`, `surname`, `email`, `password_hash`) VALUES
-(1, 'Jan', 'Kowalski', 'jan.kowalski@example.com', 'hash1'),
+(1, 'Jan', 'Kowalski', 'jan.kowalski@example.com', '$2b$12$WK4XI.KzjoYytRvrYJj80uAyB16viiNHvaQBhPnwhWG8umm.q6Zli'),
 (2, 'Anna', 'Nowak', 'anna.nowak@example.com', 'hash2'),
 (3, 'Piotr', 'Wójcik', 'piotr.wojcik@example.com', 'hash3'),
 (4, 'Maria', 'Dąbrowska', 'maria.dabrowska@example.com', 'hash4'),

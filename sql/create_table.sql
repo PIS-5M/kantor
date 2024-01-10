@@ -12,7 +12,7 @@ CREATE TABLE `kantor`.`user` (
   `user_id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `surname` varchar(45) NOT NULL,
-  `email` varchar(45) NOT NULL,
+  `email` varchar(100) NOT NULL,
   `password_hash` varchar(100) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
@@ -112,3 +112,7 @@ LEFT JOIN
     internal_transactions it ON w.wallet_id = it.wallet_id
 GROUP BY
     w.wallet_id, w.user_id;
+
+
+USE `kantor`;
+DROP procedure IF EXISTS `user_registration`;

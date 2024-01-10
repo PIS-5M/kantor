@@ -49,7 +49,9 @@ export const CreateOfferForm = () => {
     {
       onSuccess: (data) => {
         // Handle success state
-        setDialogData(data.matches);
+        console.log(`${data}`);
+        // list[list[int,int]]
+        setDialogData(data);
         setIsModalOpen(true);
       },
 
@@ -87,7 +89,9 @@ export const CreateOfferForm = () => {
                 invalid={!!formState.errors.value}
                 id="value"
                 inputMode="numeric"
-                onChange={(event) => field.onChange(Number(event.target.value))}
+                onChange={(event) =>
+                  field.onChange(parseFloat(event.target.value))
+                }
                 onBlur={field.onBlur}
                 name={field.name}
                 value={field.value}
@@ -109,10 +113,9 @@ export const CreateOfferForm = () => {
               <SelectCurrency
                 invalid={!!formState.errors.currency?.currency_id}
                 id="currency"
-                onChange={(event) => {
-                  // Directly pass the number value
-                  field.onChange(Number(event.target.value));
-                }}
+                onChange={(event) =>
+                  field.onChange(parseFloat(event.target.value))
+                }
                 name={field.name}
                 value={field.value}
               />

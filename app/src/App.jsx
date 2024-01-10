@@ -20,7 +20,7 @@ import { CreateOffer } from "./views/CreateOffer";
 import { AllOffers } from "./views/AllOffers";
 import UserProfile from "./views/UserProfile";
 // import AddNewWallet from "./components/AddNewWallet";
-
+import WalletMoneyDeposit from "./components/WalletMoneyDeposit";
 
 function App() {
   const { userId } = clientToken();
@@ -48,7 +48,7 @@ function App() {
               <Route exact path="/oferty" element={<AllOffers />} />
               <Route exact path="/profil" element={<UserProfile />} />
              {/*} <Route exact path="/dodaj_portfel" element={<AddNewWallet />} />*/}
-
+              <Route exact path="/profil" element={<WalletMoneyDeposit />} />
             </Routes>
           </Col>
         </Row>

@@ -82,6 +82,7 @@ CREATE TABLE `kantor`.`internal_transactions` (
 );
 
 
+USE `kantor`;
 CREATE OR REPLACE VIEW `money_on_offer` AS
 SELECT
     w.wallet_id,

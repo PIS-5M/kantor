@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import clientToken from '../ClientToken';
 import axios from "axios";
 import { Table, Button } from "reactstrap";
+import WalletMoneyDeposit from "./WalletMoneyDeposit";
+import WalletMoneySubtract from "./WalletMoneySubtract";
 
 
 function Wallets () {
@@ -48,12 +50,10 @@ function Wallets () {
                     <tr key={index}>
                         <th scope="row">{wallet[1]}</th>
                         <td> {wallet[0]} </td>
-                        <td>{wallet[4]} zł</td>
-                        <td>{wallet[3]} zł</td>
-                        <td> <Button type="button" className="cartStyle"
-                        >Wpłać do portfela</Button> </td>
-                        <td> <Button type="button" className="cartStyle"
-                        >Wypłać z portfela</Button> </td>
+                        <td>{wallet[4]} </td>
+                        <td>{wallet[3]} </td>
+                        <td> <WalletMoneyDeposit /> </td>
+                        <td> <WalletMoneySubtract /> </td>
                     </tr>
 
                 ))}

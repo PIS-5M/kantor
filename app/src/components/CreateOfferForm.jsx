@@ -17,23 +17,17 @@ export const newOfferSchema = z.object({
   exchange_rate: z.coerce.number().positive(),
 });
 
-// const defaultValues = {
-//   value: 0,
-//   currency: {
-//     currency_id: -1,
-//     abbreviation: "",
-//   },
-//   wanted_currency: {
-//     currency_id: -2,
-//     abbreviation: "",
-//   },
-//   exchange_rate: 0,
-// };
+const defaultValues = {
+  value: 0,
+  currency_id: -1,
+  wanted_currency_id: -2,
+  exchange_rate: 0,
+};
 
 export const CreateOfferForm = () => {
   const { handleSubmit, formState, control } = useForm({
     resolver: zodResolver(newOfferSchema),
-    // defaultValues,
+    defaultValues,
   });
 
   // helpers for showing matched offers in a modal

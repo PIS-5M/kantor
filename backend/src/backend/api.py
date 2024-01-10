@@ -90,6 +90,7 @@ async def user_data(data: dict):
 
     raise HTTPException(status_code=400, detail="Podany użytkownik nie istnieje")
 
+
 @app.post("/add_offer")
 async def email_used(data: dict):
     user_id = data['user_id']
@@ -99,3 +100,19 @@ async def email_used(data: dict):
     exchange_rate = data['exchange_rate']
     matches = database.new_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate)
     return {"matches": matches}
+
+
+@app.post("/add_new_wallet")
+async def add_new_wallet(data: dict):
+    user_id = data["user_id"]
+    currency_id = data["currency_id"]
+    account = data["account"]
+
+    hashed_account = bcrypt.hashpw(account.encode("utf-8"), bcrypt.gensalt())
+    hashed_account_string = hashed_account.decode("utf-8")
+
+    result = database.add_wallet(user_id, currency_id, hashed_account_string)
+    if result:
+        return {"message": "Succesfully added wallet"}
+    raise HTTPException(status_code=400, detail="Użytkownik już ma taki portfel")
+

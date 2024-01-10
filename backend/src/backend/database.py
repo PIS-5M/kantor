@@ -173,7 +173,7 @@ def offer_match(offer_id, selled_currency_id, value, wanted_currency_id, exchang
     remaining_value = value
     match_list = []
     while remaining_value > 0 and offer_list:
-        best_offer = min(offer_list, key=lambda x: (x[7], x[2]))
+        best_offer = min(offer_list, key=lambda x: (x[7], x[1]))
         offer_list.remove(best_offer)
         match_wanted_money = math.floor(best_offer[8] * best_offer[7] * 100 ) / 100
         if match_wanted_money <= remaining_value:

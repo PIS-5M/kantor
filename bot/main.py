@@ -14,7 +14,7 @@ currency = {
 }
 
 def sleep():
-    time.sleep(2)
+    time.sleep(1.5)
 
 def main():
     introduction()
@@ -138,6 +138,7 @@ def wallet():
         print(f'{wallets[0][0]}\t{bots[wallets[0][2]]}\t{wallets[0][3]}\t\t\t{wallets[0][4]}')
         print(f'{wallets[1][0]}\t\t\t{bots[wallets[1][2]]}\t{wallets[1][3]}\t\t\t{wallets[1][4]}')
     print('\n')
+    sleep()
 
 
 def add_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate):

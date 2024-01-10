@@ -281,6 +281,61 @@ def test_delete_offer_success(mocker):
 
     assert result is True
 
+@pytest.fixture
+def mock_cursor(mocker):
+    return mocker.patch('backend.database.mysql.connector.connect.return_value.cursor')
+
+def test_user_offers_success(mock_cursor):
+
+    mock_fetchone = mock_cursor.return_value.fetchone
+    mock_fetchone.return_value = {
+        "offer_history_id": 1,
+        "publication_date": "2022-01-09T12:00:00",
+        "last_modification_date": "2022-01-10T08:30:00",
+        "value": 100.0,
+        "currency_id": 1,
+        "abbreviation": "USD",
+        "wanted_currency_id": 2,
+        "exchange_rate": 1.5,
+        "account_number_hash": '12345678901234567890123456',
+        "is_cancelled": False
+    }
+
+    result = db.user_offers(1)
+
+    assert result == {
+        "offer_history_id": 1,
+        "publication_date": "2022-01-09T12:00:00",
+        "last_modification_date": "2022-01-10T08:30:00",
+        "value": 100.0,
+        "currency": {
+            "currency_id": 1,
+            "abbreviation": "USD",
+        },
+        "wanted_currency_id": 2,
+        "exchange_rate": 1.5,
+        "account_number_hash": '12345678901234567890123456',
+        "status": "Active"
+    }
+
+def test_user_offers_not_found(mock_cursor):
+
+    mock_fetchone = mock_cursor.return_value.fetchone
+    mock_fetchone.return_value = None
+
+    result = db.user_offers(1)
+
+    assert result is None
+
+def test_user_offers_database_error(mock_cursor):
+
+    mock_execute = mock_cursor.return_value.execute
+    mock_execute.side_effect = Exception("Database error")
+
+    result = db.user_offers(1)
+
+    assert result is None
+
 def test_delete_offer_not_found(mocker):
 
     mocker.patch('backend.database.mysql.connector.connect')

@@ -253,7 +253,41 @@ def add_internal_transaction(user_id, currency_id, value):
             cursor.close()
         if 'conn' in locals() and conn.is_connected():
             conn.close()
+            
+def user_offers(seller_id):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        cursor = conn.cursor(dictionary=True)
+        query = (
+            "SELECT "
+            "   oh.offer_history_id, "
+            "   oh.publication_date, "
+            "   oh.last_modification_date, "
+            "   oh.value, "
+            "   c.currency_id, "
+            "   c.abbreviation, "
+            "   oh.wanted_currency_id, "
+            "   oh.exchange_rate, "
+            "   w.account_number_hash, "
+            "   oh.is_cancelled "
+            "FROM offer_history oh "
+            "JOIN user u ON oh.seller_id = u.user_id "
+            "JOIN currency c ON oh.publication_currency_id = c.currency_id "
+            "JOIN wallet wa ON oh.seller_id = wa.user_id "
+            "WHERE oh.seller_id = %s"
+        )
+        cursor.execute(query, (seller_id,))
+        result = cursor.fetchone()
 
+        return result
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return None
+    finally:
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
 
 
 def get_wallet(user_id):

@@ -117,6 +117,30 @@ async def add_new_wallet(data: dict):
         return {"message": "Succesfully added wallet"}
     raise HTTPException(status_code=400, detail="Użytkownik już ma taki portfel")
 
+@app.get("/user_offers/{seller_id}", response_model=dict)
+async def user_offers(seller_id: int):
+    result = database.user_offers(seller_id)
+
+    if result is None:
+        raise HTTPException(status_code=404, detail="Offer not found for the given seller ID")
+
+    offer_details = {
+        "offer_id": result["offer_history_id"],
+        "publication_date": result["publication_date"],
+        "last_modification_date": result["last_modification_date"],
+        "value": result["value"],
+        "currency": {
+            "currency_id": result["currency_id"],
+            "abbreviation": result["abbreviation"],
+        },
+        "wanted_currency": result["wanted_currency_id"],
+        "exchange_rate": result["exchange_rate"],
+        "account_number": result["account_number_hash"],
+        "status": "Cancelled" if result["is_cancelled"] else "Active",
+    }
+
+    return offer_details
+
 
 @app.post("/show_wallet")
 async def show_wallet(data: dict):

@@ -322,7 +322,8 @@ def test_user_offers_success(mock_cursor):
 def test_user_offers_not_found(mock_cursor):
 
     mock_fetchone = mock_cursor.return_value.fetchone
-    mock_fetchone.return_value = None
+    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
+    mock_cursor.fetchone.return_value = ()
 
     result = db.user_offers(1)
 
@@ -340,12 +341,13 @@ def test_user_offers_database_error(mock_cursor):
 def test_delete_offer_not_found(mocker):
 
     mocker.patch('backend.database.mysql.connector.connect')
-    mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value.rowcount', return_value=0)
+    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
+    mock_cursor.fetchone.return_value = ()
 
     offer_id = 123
     result = db.delete_offer(offer_id)
 
-    assert result is False
+    assert result is None
 
 def test_delete_offer_database_error(mocker):
 

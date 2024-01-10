@@ -91,5 +91,7 @@ async def add_to_wallet(data: dict):
 async def add_to_wallet(data: dict):
     wallet_id = data["wallet_id"]
     value = data["value"]
-    database.wallet_subtract(wallet_id, value)
-    return {"message": "Succesfully subtracted from wallet"}
+    result = database.wallet_subtract(wallet_id, value)
+    if result:
+        return {"message": "Succesfully subtracted from wallet"}
+    raise HTTPException(status_code=400, detail="Za mało pieniędzy w portfelu")

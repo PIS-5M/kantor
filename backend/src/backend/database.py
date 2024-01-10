@@ -127,9 +127,16 @@ def wallet_subtract(wallet_id, value):
         # Utworz obiekt kursora
         cursor = conn.cursor()
         # Wywolaj funkcje
+        args = (wallet_id,)
+        cursor.execute(f"select value_in_wallet from money_in_wallet where wallet_id = %s", args)
+        max_sum = cursor.fetchone()
+        if value > max_sum[0]:
+            return False
+
         args = (wallet_id, -value)
         cursor.execute(f"INSERT INTO `kantor`.`transaction` (`wallet_id`, value) VALUES (%s, %s);", args)
         cursor.execute("COMMIT;")
+        return True
     except mysql.connector.Error as err:
         print(f"Error: {err}")
     finally:

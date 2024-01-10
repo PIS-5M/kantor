@@ -178,3 +178,10 @@ async def get_user_transactions(user_id: int):
     # ]
 
     return {"transactions": transactions}
+
+@app.post("/get_uncompleted_offers")
+async def email_used():
+    offers = database.get_uncompleted_offer()
+    if not offers:
+        offers = []
+    return {"offers": offers}

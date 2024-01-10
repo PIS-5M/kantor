@@ -6,7 +6,7 @@ import math
 db_config = {
     "host": "localhost",
     "user": "root",
-    "password": "root",
+    "password": "Mikato@12",
     "database": "kantor",
 } # change password for correct
 
@@ -260,7 +260,7 @@ def add_internal_transaction(user_id, currency_id, value):
             cursor.close()
         if 'conn' in locals() and conn.is_connected():
             conn.close()
-            
+
 def user_offers(seller_id):
     conn = mysql.connector.connect(**db_config)
     try:
@@ -373,6 +373,24 @@ def get_transactions(id):
     except mysql.connector.Error as err:
         print(f"Error: {err}")
     finally:
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
+
+def get_uncompleted_offer():
+    conn = mysql.connector.connect(**db_config)
+    try:
+        # Utworz obiekt kursora
+        cursor = conn.cursor()
+        # Pobierz wynik z procedury
+        cursor.execute(f"SELECT * from uncompleted_offers")
+        result = cursor.fetchall()
+        return result
+    except mysql.connector.Error as err:
+        print(f"Blad: {err}")
+    finally:
+        # Zamknij kursor i polaczenie
         if 'cursor' in locals() and cursor is not None:
             cursor.close()
         if 'conn' in locals() and conn.is_connected():

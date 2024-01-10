@@ -1,6 +1,5 @@
 import api1 as ap
 import time
-import os
 
 
 bots = {
@@ -14,35 +13,29 @@ currency = {
     2: 'EUR'
 }
 
-
-def clear():
-    os.system('cls')
-    # os.system('clear')
-
 def sleep():
     time.sleep(2)
 
 def main():
-    # introduction()
-    # scene1()
-    # scene2()
+    introduction()
+    scene1()
+    scene2()
     scene3()
     scene4()
+    scene5()
 
 def introduction():
-    clear()
     print('\n\nWitamy w kantorze 5MONET.')
     sleep()
-    print('To jest test matchowania')
+    print('To jest test matchowania.')
     sleep()
-    print('Mamy 3 użytkowników, którzy będą testować różne scenariusze')
+    print('Mamy 3 użytkowników, którzy będą testować różne scenariusze.')
     sleep()
 
 def scene1():
-    clear()
     print('\nScenariusz 1')
     sleep()
-    print('opis')
+    print('Boty wspawiają oferty które mają ten sam przelicznik i wartość')
     sleep()
     print_offers()
     wallet()
@@ -54,10 +47,9 @@ def scene1():
     add_offer(2, 2, 100.0, 1, 0.5)
 
 def scene2():
-    clear()
     print('\nScenariusz 2')
     sleep()
-    print('opis')
+    print('Boty się nie dopasowują, gdyż wstają zbyt wysokie oferty.')
     sleep()
     print_offers()
     wallet()
@@ -70,10 +62,10 @@ def scene2():
 
 
 def scene3():
-    clear()
     print('\nScenariusz 3')
     sleep()
-    print('opis')
+    print('Dwa boty wstawiają oferty, następnie trzeci bot wstawia ofertę przeciwną.')
+    print('Trzeciemu botowi zostają środki na ofercie.')
     sleep()
     print_offers()
     wallet()
@@ -88,10 +80,10 @@ def scene3():
     add_offer(3, 2, 200.0, 1, 0.5)
 
 def scene4():
-    clear()
     print('\nScenariusz 4')
     sleep()
-    print('opis')
+    print('Boty wstawiają ten sam kurs dopasowany będzie ten,')
+    print('który wstawił wcześniejszą ofertę.')
     sleep()
     print_offers()
     wallet()
@@ -105,31 +97,47 @@ def scene4():
     sleep()
     add_offer(3, 2, 200.0, 1, 0.5)
 
+def scene5():
+    print('\nScenariusz 5')
+    sleep()
+    print('Dwa boty wstawiają oferty,')
+    print('Trzeci bot doda ofertę, z której nie zostaną wolne środki')
+    print('Pierwszy bot pozostanie z ofertą.')
+    sleep()
+    print_offers()
+    wallet()
+    print('Bot 1 wystawia ofertę na 50 dolarów za euro w cenie 1.99')
+    sleep()
+    add_offer(1, 1, 50.0, 2, 1.99)
+    print('Bot 2 wystawia ofertę na 40.67 dolarów za euro w cenie 1.97')
+    sleep()
+    add_offer(2, 1, 40.67, 2, 1.97)
+    print('Bot 3 wystawia ofertę na 50 euro za dolary w cenie 0.5')
+    sleep()
+    add_offer(3, 2, 50.0, 1, 0.5)
+
 
 
 
 def print_offers():
-    print('Dostępne oferty:')
-    sleep()
+    print('\nDostępne oferty:')
     offers = ap.get_uncompleted_offers()
     print('sprzedawane\tposzukiwane\tkurs')
     if offers:
         for offer in offers:
             print(f'{offer[8]} {currency[offer[4]]}\t{currency[offer[6]]}\t\t{offer[7]}')
-            sleep()
     else:
         print('Brak dostępnych ofert.')
         sleep()
 
 def wallet():
-    print('Stan portfeli:')
-    sleep()
+    print('\nStan portfeli:')
     print('Waluta\t\t\tbot\tdostępne w portfelu\tw ofertach')
     for i in range(1, 4):
         wallets = ap.show_wallet(i)
         print(f'{wallets[0][0]}\t{bots[wallets[0][2]]}\t{wallets[0][3]}\t\t\t{wallets[0][4]}')
         print(f'{wallets[1][0]}\t\t\t{bots[wallets[1][2]]}\t{wallets[1][3]}\t\t\t{wallets[1][4]}')
-        sleep()
+    print('\n')
 
 
 def add_offer(user_id, selled_currency_id, value, wanted_currency_id, exchange_rate):

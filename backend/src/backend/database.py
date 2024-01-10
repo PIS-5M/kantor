@@ -289,6 +289,30 @@ def user_offers(seller_id):
         if 'conn' in locals() and conn.is_connected():
             conn.close()
 
+
+def get_wallet(user_id):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        # Utwórz obiekt kursora
+        cursor = conn.cursor()
+        # Wywołaj funkcję
+        args = (user_id,)
+        cursor.execute(f"select f.currency_name, w.wallet_id, w.user_id, value_in_wallet, value_in_offer from money_in_wallet w join money_on_offer f on w.wallet_id = f.wallet_id where w.user_id = %s", args)
+
+        # Pobierz wyniki
+        wallet = cursor.fetchall()
+        print(wallet)
+        return wallet
+    except mysql.connector.Error as err:
+        print(f"Błąd: {err}")
+    finally:
+        # Zamknij kursor i połączenie
+        if "cursor" in locals() and cursor is not None:
+            cursor.close()
+        if "conn" in locals() and conn.is_connected():
+            conn.close()
+
+
 class DatabaseError(Exception):
     def __init__(self, message: str):
         self.message = message

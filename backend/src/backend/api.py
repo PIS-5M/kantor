@@ -141,6 +141,14 @@ async def user_offers(seller_id: int):
 
     return offer_details
 
+
+@app.post("/show_wallet")
+async def show_wallet(data: dict):
+    user_id = data["user_id"]
+    wallet = database.get_wallet(user_id)
+    return {"wallet": wallet}
+
+
 @app.delete("/delete_offer/{offer_id}")
 async def delete_offer(offer_id: int):
     try:

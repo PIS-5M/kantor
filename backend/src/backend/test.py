@@ -6,6 +6,7 @@ import mysql.connector
 import datetime
 import math
 from backend.database import login
+import backend.database as db
 
 def test_login_successful(mocker):
     # Mock the cursor and execute method
@@ -68,6 +69,7 @@ def test_login_database_error(mocker):
 
     with pytest.raises(Exception, match='Database error'):
         db.login('test@example.com', 'password123')
+
 
 
 # add offer
@@ -352,3 +354,27 @@ def test_delete_offer_database_error(mocker):
     offer_id = 123
     with pytest.raises(db.DatabaseError, match="Database error occurred"):
         db.delete_offer(offer_id)
+
+def test_get_wallet(mocker):
+    # Mock the cursor and execute method
+    fake_results = [('USD', 1, 123, 500.0, 1000.0)]
+    mocker.patch('backend.database.mysql.connector.connect')
+    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
+    mock_cursor.fetchall.return_value = fake_results
+    # Przygotowanie danych testowych
+    user_id = 1
+
+    # Wywołanie funkcji
+    result = db.get_wallet(user_id)
+
+    assert result == fake_results
+
+
+def test_get_wallet_error(mocker):
+    # Mock the cursor and execute method to raise an exception
+    mocker.patch('backend.database.mysql.connector.connect')
+    mock_cursor = mocker.patch('backend.database.mysql.connector.connect.return_value.cursor.return_value')
+    mock_cursor.execute.side_effect = Exception('Database error')
+
+    with pytest.raises(Exception, match='Database error'):
+        db.get_wallet(1)

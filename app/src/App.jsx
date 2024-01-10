@@ -19,6 +19,8 @@ import { CreateOffer } from "./views/CreateOffer";
 // import { CreateOfferForm } from "./components/CreateOfferForm";
 import { AllOffers } from "./views/AllOffers";
 import UserProfile from "./views/UserProfile";
+// import AddNewWallet from "./components/AddNewWallet";
+
 
 function App() {
   const { userId } = clientToken();
@@ -43,7 +45,9 @@ function App() {
               <Route exact path="/dodaj" element={<CreateOffer />} />
               {/* <Route exact path="/dodaj" element={<CreateOfferForm />} /> */}
               <Route exact path="/oferty" element={<AllOffers />} />
-              <Route exact path="/profil" element={<UserProfile />}></Route>
+              <Route exact path="/profil" element={<UserProfile />} />
+             {/*} <Route exact path="/dodaj_portfel" element={<AddNewWallet />} />*/}
+
             </Routes>
           </Col>
         </Row>

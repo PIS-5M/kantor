@@ -100,3 +100,34 @@ def get_all_currency():
             cursor.close()
         if "conn" in locals() and conn.is_connected():
             conn.close()
+
+
+
+def add_wallet(user_id, currency_id, account_number_hash):
+    conn = mysql.connector.connect(**db_config)
+    try:
+        # Utworz obiekt kursora
+        cursor = conn.cursor()
+        # Wywolaj funkcje
+        # Sprawdz czy juz ma taki portfel
+        args = (user_id, currency_id)
+        cursor.execute(f"SELECT * from wallet where user_id=%s and currency_id=%s", args)
+
+        # Pobierz wyniki
+        result = cursor.fetchone()
+        if not result:
+            args = (user_id, currency_id, account_number_hash)
+            cursor.execute(f"INSERT INTO `kantor`.`wallet` (`user_id`, `currency_id`, `account_number_hash`) VALUES (%s, %s, %s)", args)
+            cursor.execute("COMMIT;")
+            return True
+        else:
+            # juz ma
+            return False
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+    finally:
+        # Zamknij kursor i polaczenie
+        if "cursor" in locals() and cursor is not None:
+            cursor.close()
+        if "conn" in locals() and conn.is_connected():
+            conn.close()

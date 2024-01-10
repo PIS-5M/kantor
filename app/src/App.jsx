@@ -24,6 +24,7 @@ import UserProfile from "./views/UserProfile";
 
 function App() {
   const { userId } = clientToken();
+
   return (
     <div className="font-sans">
       <Toaster />

@@ -11,6 +11,16 @@ import {
 } from "@tanstack/react-table";
 import { Button, Table } from "reactstrap";
 import { Filter } from "./table-utils";
+import { useQuery } from "react-query";
+
+const fetchTableData = async () => {
+  const response = await fetch("http://localhost:8000/all-offers");
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  return response.json();
+};
+
 const columnHelper = createColumnHelper();
 
 const columns = [
@@ -45,7 +55,12 @@ const columns = [
   }),
 ];
 
-export const AllOffersTable = ({ data }) => {
+export const AllOffersTable = () => {
+  const { data, isLoading, isError, error } = useQuery(
+    "tableData",
+    fetchTableData
+  );
+
   const [columnFilters, setColumnFilters] = React.useState([]);
   const table = useReactTable({
     data,
@@ -60,6 +75,13 @@ export const AllOffersTable = ({ data }) => {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
+
+  // Handle loading state
+  if (isLoading) return <div>Loading...</div>;
+
+  // Handle error state
+  if (isError) return <div>Error: {error.message}</div>;
+
   return (
     <Table className="custom-table">
       <thead className="!bg-blue-600 !text-white text-center ">

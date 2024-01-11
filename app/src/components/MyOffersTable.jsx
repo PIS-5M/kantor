@@ -3,7 +3,7 @@ import clientToken from "../ClientToken";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import z from "zod";
 import { Table } from "reactstrap";
-import { Trash, Edit } from "lucide-react";
+import { Trash } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
@@ -33,7 +33,7 @@ const OfferRow = ({ offer }) => {
   const qc = useQueryClient();
   const { mutateAsync, isLoading } = useMutation(
     () =>
-      fetch(`http://localhost:8000/user-offers/${offer.offer_id}`, {
+      fetch(`http://localhost:8000/delete_offer/${offer.offer_id}`, {
         method: "DELETE",
       }),
     {
@@ -86,7 +86,7 @@ export const MyOffersTable = ({ type }) => {
   const { userId } = clientToken();
 
   const { data, isLoading, error } = useQuery("userOffers", () =>
-    fetch(`http://localhost:8000/get_offer_details/${userId}`, {
+    fetch(`http://localhost:8000/user_offers/${userId}`, {
       headers: { Authorization: `Bearer: ${userId()}` },
     })
       .then((res) => {

@@ -129,7 +129,7 @@ async def add_new_wallet(data: dict):
     raise HTTPException(status_code=400, detail="Użytkownik już ma taki portfel")
 
 
-@app.get("/user_offers/{seller_id}", response_model=List[Dict[str, Any]])
+@app.get("/user_offers/{seller_id}", response_model=List[dict[str, any]])
 async def user_offers(seller_id: int):
     results = database.user_offers(seller_id)
 

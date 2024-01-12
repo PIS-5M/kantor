@@ -86,9 +86,7 @@ export const MyOffersTable = ({ type }) => {
   const { userId } = clientToken();
 
   const { data, isLoading, error } = useQuery("userOffers", () =>
-    fetch(`http://localhost:8000/user_offers/${userId}`, {
-      headers: { Authorization: `Bearer: ${userId()}` },
-    })
+    fetch(`http://localhost:8000/user_offers/${userId}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Network response was not ok");

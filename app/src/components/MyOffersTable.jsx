@@ -30,25 +30,26 @@ const userOffersResponseSchema = z.object({
 
 // Create the component to display a single offer
 const OfferRow = ({ offer }) => {
-  const qc = useQueryClient();
-  const { mutateAsync, isLoading } = useMutation(
-    () =>
-      fetch(`http://localhost:8000/delete_offer/${offer.offer_id}`, {
-        method: "DELETE",
-      }),
-    {
-      onSuccess: () => qc.invalidateQueries("userOffers"),
-    }
-  );
+  //   const qc = useQueryClient();
+  //   const { mutateAsync, isLoading } = useMutation(
+  //     () =>
+  //       fetch(`http://localhost:8000/delete_offer/${offer.offer_id}`, {
+  //         method: "DELETE",
+  //       }),
+  //     {
+  //       onSuccess: () => qc.invalidateQueries("userOffers"),
+  //     }
+  //   );
 
-  const deleteOfferHandler = async () => {
-    try {
-      await mutateAsync();
-      toast.success("Usunięto ofertę!");
-    } catch (e) {
-      toast.error("Nie udało się usunąć oferty!");
-    }
-  };
+  // const deleteOfferHandler = async () => {
+  //   try {
+  //     await mutateAsync();
+  //     toast.success("Usunięto ofertę!");
+  //   } catch (e) {
+  //     toast.error("Nie udało się usunąć oferty!");
+  //   }
+  // };
+
   return (
     <tr>
       <td>{offer.publication_date.toISOString().split("T")[0]}</td>
@@ -61,12 +62,9 @@ const OfferRow = ({ offer }) => {
       {offer.status === "ACTIVE" && (
         <td>
           <div className="flex mx-2 gap-4">
-            {/* <button className="flex items-center hover:bg-blue-100 px-2 py-1 rounded">
-              <Edit className="w-4 h-4 mr-2" /> Edytuj
-            </button> */}
             <button
-              disabled={isLoading}
-              onClick={deleteOfferHandler}
+              // disabled={isLoading}
+              // onClick={deleteOfferHandler}
               className="flex items-center hover:bg-red-100 px-2 py-1 rounded"
             >
               <Trash className="w-4 h-4 mr-2" /> Usuń

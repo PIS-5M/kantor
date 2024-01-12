@@ -151,7 +151,10 @@ async def user_offers(seller_id: int):
                 "currency_id": result["currency_id"],
                 "abbreviation": result["abbreviation"],
             },
-            "wanted_currency": result["wanted_currency_id"],
+            "wanted_currency": {
+                "currency_id": result["currency_id"],
+                "abbreviation": result["abbreviation"],
+            },
             "exchange_rate": result["exchange_rate"],
             "account_number": result["account_number_hash"],
             "status": "CLOSED" if result["is_cancelled"] else "ACTIVE",
